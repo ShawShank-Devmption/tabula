@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "default",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t2_insert_row__default__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 10.2,
+  "tool_calls": 2,
+  "cost_usd": 0.033509,
+  "num_turns": 3,
+  "is_error": false,
+  "final_message": "I added the sale as row 11 on the Sales sheet: West, Dana Lee, 40 units at 125. I haven't opened the saved file in Excel or recalculated it, so the new values haven't been checked.\n\n- **New row:** Revenue is `=C11*D11` and Commission is `=E11*CommissionRate`. The formatting is copied from row 10.\n- **Totals:** The Total row moved to row 23. Its sums now cover rows 2\u201322.\n- **Summary sheet:** Total revenue and Total commission now point to `Sales!E23` and `Sales!F23`. North revenue sums rows 2\u201322. The named range `SalesRevenue`, which Average sale uses, now spans `E2:E22`.\n\nThe Sales sheet has two placeholder rows (Test / TEST, 1 \u00d7 1) that were already counted in the totals. I left them alone since you didn't ask about them.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

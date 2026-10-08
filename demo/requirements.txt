@@ -1,0 +1,3 @@
+# checker-only environment (separate from Tabula): pycel needs openpyxl 3.0
+pycel==1.0b30
+openpyxl==3.0.10

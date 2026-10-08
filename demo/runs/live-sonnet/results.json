@@ -1,0 +1,2132 @@
+[
+  {
+    "task": "t1_tax_column",
+    "arm": "default",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.1,
+    "tool_calls": 2,
+    "cost_usd": 0.0257632,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I added the Tax column to the Sales sheet and a Total tax line to the Summary sheet, and saved both in `book.xlsx`. I haven't opened the file in Excel or recalculated it, so the formulas haven't been checked for computed values.\n\n- **Sales sheet:**\n  - G1 is the header \"Tax\".\n  - G2:G21 each hold `=E{row}*TaxRate`. `TaxRate` is the existing named range pointing to Inputs!B2 (18%).\n  - G22 is `=SUM(G2:G21)`.\n  - I copied the formatting from column F, including the column width.\n- **Summary sheet:** A8 is \"Total tax\" and B8 is `=Sales!G22`. Both are formatted like row 4.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "default",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__default__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.3,
+    "tool_calls": 2,
+    "cost_usd": 0.030569600000000002,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I added the Tax column and the Summary line, and saved both to `book.xlsx`. I haven't opened the file in Excel or recalculated it, so the new formulas haven't been checked.\n\n- **Sales sheet:** G1 now says \"Tax\". G2:G21 each hold `=E{row}*TaxRate`, which uses the named range pointing to the tax rate on the Inputs sheet (18%). G22 holds `=SUM(G2:G21)`. I copied the formatting from column F.\n- **Summary sheet:** A8 says \"Total tax\" and B8 holds `=Sales!G22`.\n\nRows 8 and 15 on the Sales sheet are test rows (Region \"Test\", Rep \"TEST\"). Each has 1 unit at a price of 1. I gave them tax like every other row, because the existing totals already include them. Excluding them would change the Revenue and Commission totals too, so I left that alone.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "default",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__default__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.3,
+    "tool_calls": 3,
+    "cost_usd": 0.030950400000000003,
+    "num_turns": 4,
+    "is_error": false,
+    "final_message": "I added the Tax column to the Sales sheet and a Total tax line to the Summary sheet, and saved `book.xlsx` in place. I didn't recalculate the workbook or check the computed values.\n\n- **Sales:** G1 is the header \"Tax\". G2:G21 are `=E{row}*TaxRate`, using the existing named range for the Inputs tax rate (18%). G22 is `=SUM(G2:G21)`. The new cells copy column F's formatting, and column G has the same width as F.\n- **Summary:** A8 is \"Total tax\" and B8 is `=Sales!G22`.\n\nThe two \"TEST\" rows (8 and 15) are included in the tax and in the totals, as they already are for Revenue and Commission.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.8,
+    "tool_calls": 4,
+    "cost_usd": 0.0328644,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I added the Tax column and the Summary line, and saved them to `book.xlsx`. Tabula's check passed with no errors, and the apply step re-read the file and verified it.\n\n- **Sales sheet:** G1 is \"Tax\". G2:G21 is `=E2*TaxRate`, filled down, where `TaxRate` is the named cell `Inputs!B2`. G22 is `=SUM(G2:G21)`.\n- **Summary sheet:** A8 is \"Total tax\" and B8 is `=Sales!G22`.\n\nAll the new cells are live formulas.\n\nG8 comes out at only 0.18, so that row's Revenue (E8) looks like about 1. The other rows are in the hundreds or thousands. I didn't change it, but you may want to check that row's source data.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "tabula",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__tabula__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.2,
+    "tool_calls": 4,
+    "cost_usd": 0.032464400000000004,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I added the Tax column and the Summary line, and saved them to `book.xlsx` in place. Tabula's check passed, and `apply` re-read the file and verified the 24 written cells. I haven't opened the file in Excel.\n\n- **Sales sheet:** G1 is \"Tax\". G2:G21 each use `=E2*TaxRate`, where `TaxRate` is the existing name for `Inputs!B2`. G22 is `=SUM(G2:G21)`.\n- **Summary sheet:** A8 is \"Total tax\" and B8 is `=Sales!G22`.\n\nG8 comes out as 0.18, which is very small next to the other rows (567 to 907). That looks like row 8's Revenue is unusually low, which I didn't investigate.\n\nI also left the script `edit.tel` in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "tabula",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t1_tax_column__tabula__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.3,
+    "tool_calls": 4,
+    "cost_usd": 0.0325644,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I added the Tax column to the Sales sheet and a \"Total tax\" line to the Summary sheet, and saved `book.xlsx` in place. Tabula's check passed, and the apply step re-read the file and confirmed the 24 written cells. I haven't opened the file in Excel.\n\n- **Sales:** G1 is \"Tax\". G2:G21 each hold `=E2*TaxRate` (and so on down), where `TaxRate` is the defined name for `Inputs!B2`. G22 is `=SUM(G2:G21)`.\n- **Summary:** A8 is \"Total tax\" and B8 is `=Sales!G22`.\n\nOne value looks odd. G8 comes out at 0.18, which means row 8's Revenue is tiny. I left it alone because I only added the new column.\n\nI also left an `edit.tel` script in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "default",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.2,
+    "tool_calls": 2,
+    "cost_usd": 0.033509,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I added the sale as row 11 on the Sales sheet: West, Dana Lee, 40 units at 125. I haven't opened the saved file in Excel or recalculated it, so the new values haven't been checked.\n\n- **New row:** Revenue is `=C11*D11` and Commission is `=E11*CommissionRate`. The formatting is copied from row 10.\n- **Totals:** The Total row moved to row 23. Its sums now cover rows 2\u201322.\n- **Summary sheet:** Total revenue and Total commission now point to `Sales!E23` and `Sales!F23`. North revenue sums rows 2\u201322. The named range `SalesRevenue`, which Average sale uses, now spans `E2:E22`.\n\nThe Sales sheet has two placeholder rows (Test / TEST, 1 \u00d7 1) that were already counted in the totals. I left them alone since you didn't ask about them.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": false,
+        "detail": "Sales!E12=5000 (expected 4340); Sales!E13=4340 (expected 4275); Sales!E14=4275 (expected 4940); Sales!E15=4940 (expected 4370) (+7 more)"
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": false,
+        "detail": "Sales!E23=82133 (expected 81269); Sales!F23=4,959 (expected 4,876)"
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3=82133 (expected 81269); Summary!B4=4,959 (expected 4,876); Summary!B5=3,911 (expected 3,870); Summary!B6=18271 (expected 21816)"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "Summary!B3=89093 (expected 88229)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 11,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "default",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__default__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 28.2,
+    "tool_calls": 5,
+    "cost_usd": 0.053181599999999996,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I added the West / Dana Lee sale as row 11 of the Sales sheet and saved it to `book.xlsx`. I haven't opened the file in Excel or recalculated it, so the formula results are unchecked. I printed the edited rows after saving, and their formulas look right.\n\n- **New row:** Units is 40 and Unit Price is 125. Revenue is `=C11*D11` and Commission is `=E11*CommissionRate`, the same as the other rows. I copied the formatting from row 10.\n- **Shifted rows:** The old rows 11\u201321 moved down to 12\u201322. I rewrote their Revenue and Commission formulas so each one points at its own row.\n- **Totals:** The Total row is now row 23, and its Units, Revenue and Commission sums cover rows 2\u201322.\n- **Summary sheet:**\n  - Total revenue and Total commission now point at `Sales!E23` and `Sales!F23`.\n  - North revenue now sums rows 2\u201322.\n  - Average sale uses the named range `SalesRevenue`, which I extended to `Sales!$E$2:$E$22`.\n  - Target met? reads Total revenue, so it picks up the new sale too.\n\n**Leftover file:** I left a helper script, `edit.py`, in the folder. My attempt to delete it was refused, so you can remove it.\n\n**Test rows:** The sheet has two \"Test\" rows, 8 and 15 in the original numbering. I left them in place since you didn't mention them, so they still count in the totals.",
+    "permission_denials": 2,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "default",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__default__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 13.7,
+    "tool_calls": 2,
+    "cost_usd": 0.031084999999999995,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I added the West / Dana Lee sale (40 units at 125) as row 11 on the Sales sheet. I haven't opened the file in Excel to recalculate it, so the new totals haven't been checked.\n\n- **New row:** Revenue is `=C11*D11` and Commission is `=E11*CommissionRate`, the same as the other rows. It uses the same formatting as row 10.\n- **Sales totals:** The old rows 11\u201321 moved down one row, and the Total row is now row 23. Its sums now run over rows 2\u201322.\n- **Summary sheet:**\n  - Total revenue and Total commission now point to `Sales!E23` and `Sales!F23`.\n  - North revenue now sums rows 2\u201322.\n  - Average sale uses the `SalesRevenue` named range, which I extended to `Sales!$E$2:$E$22`.\n  - Target met? reads from Total revenue, so it picks up the new sale automatically.\n\nThe two existing \"Test\" rows (now rows 8 and 16) are still in the data and still count toward the totals. I left them alone because you didn't ask me to remove them.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": false,
+        "detail": "Sales!E12=5000 (expected 4340); Sales!E13=4340 (expected 4275); Sales!E14=4275 (expected 4940); Sales!E15=4940 (expected 4370) (+7 more)"
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": false,
+        "detail": "Sales!E23=82133 (expected 81269); Sales!F23=4,959 (expected 4,876)"
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3=82133 (expected 81269); Summary!B4=4,959 (expected 4,876); Summary!B5=3,911 (expected 3,870); Summary!B6=18271 (expected 21816)"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "Summary!B3=89093 (expected 88229)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 11,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 13.7,
+    "tool_calls": 6,
+    "cost_usd": 0.040475,
+    "num_turns": 7,
+    "is_error": false,
+    "final_message": "I inserted the new sale as row 11 on the Sales sheet and saved `book.xlsx` in place. Tabula re-read the saved file and verified it. I didn't open it in Excel.\n\n- **New row:** West, Dana Lee, 40 units at 125. Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300.\n- **Totals:** The totals row moved to row 23. Its `SUM` ranges grew to cover the new row, so Units is 657, Revenue is 81,269 and Commission is 4,876.14.\n- **Summary sheet:**\n  - Total revenue (B3) is 81,269.\n  - Total commission (B4) is 4,876.14.\n  - Average revenue (B5) is about 3,869.95.\n  - The North-only `SUMIF` (B6) is unchanged, since the new sale is in the West region.\n  - The target check (B7) wasn't listed as changed.\n- **Named range:** `SalesRevenue` also expanded to include the new row.\n\nI also left an `edit.tel` script in the folder; it's the edit script I applied.",
+    "permission_denials": 1,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "tabula",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 11.7,
+    "tool_calls": 5,
+    "cost_usd": 0.0358256,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I inserted the West / Dana Lee sale (40 units at 125) as row 11 on the Sales sheet and saved `book.xlsx` in place. The apply step re-read the file and verified it.\n\n- **New row:** Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300. These match the other rows.\n- **Totals:** Inserting inside the range made every total formula and named range cover the new row. The Sales totals row is now row 23, and its totals are Units 657, Revenue 81,269 and Commission 4,876.14.\n- **Summary:** All five figures now include the new sale.\n  - Total revenue (`B3`) is 81,269.\n  - Total commission (`B4`) is 4,876.14.\n  - Average revenue (`B5`) is about 3,869.95. Its `SalesRevenue` range now runs `E2:E22`.\n  - North revenue (`B6`) now reads `A2:A22` and `E2:E22`.\n  - The target check (`B7`) was not in the list of changed values.\n\nI also added a check that the Sales revenue total equals the sum of rows 2 to 22. It passed.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "tabula",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 11.0,
+    "tool_calls": 5,
+    "cost_usd": 0.0358742,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I inserted the missing sale as row 11 on the Sales sheet and saved `book.xlsx` in place. Tabula re-read the file after writing and verified it.\n\n- **New row:** West, Dana Lee, 40 units at 125. Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300.\n- **Totals:** The total row moved to row 23, and its sums now cover the new row.\n  - Units: 617 \u2192 657\n  - Revenue: 76,269 \u2192 81,269\n  - Commission: 4,576.14 \u2192 4,876.14\n- **Summary sheet:** Every figure now includes the sale.\n  - Total revenue: 81,269\n  - Total commission: 4,876.14\n  - Average revenue (`SalesRevenue`): 3,813.45 \u2192 3,869.95\n  - The North-only total is unchanged, since the new sale is in the West.\n  - The target check still compares against the updated total.\n\nThe two checks in the script, that the Sales revenue total equals the sum of E2:E22 and that Summary!B3 equals it, both passed.\n\nI left `edit.tel` in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "default",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.8,
+    "tool_calls": 2,
+    "cost_usd": 0.03253,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows (original rows 8 and 15) from the Sales sheet, and the rows below moved up. I haven't opened the saved file in Excel or recalculated it, so I haven't seen the new totals. The data now ends at row 19 and the Total row is at row 20.\n\n- **Row formulas:** Revenue and Commission in rows 2\u201319 still use live formulas that point at their own row.\n- **Totals:** The Total row now sums rows 2\u201319 for Units, Revenue and Commission.\n- **Summary:** The North revenue formula now covers Sales rows 2\u201319. Total revenue and Total commission point at the Total row's cells, so they follow it down.\n- **Named range:** `SalesRevenue` now covers `Sales!$E$2:$E$19`, which keeps the Average sale figure correct.\n\nThe Sales sheet has no conditional formatting that needed adjusting. Changes are saved in `book.xlsx`.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3=0 (expected 76267); Summary!B4=0 (expected 4,576); Summary!B7='No' (expected 'Yes')"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "the result no longer depends on Sales!C2 (the link is broken)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 9,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "default",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__default__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.8,
+    "tool_calls": 2,
+    "cost_usd": 0.0323462,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows (old rows 8 and 15) from the Sales sheet, so the rows below moved up. I haven't opened the file in Excel to check the recalculated values. I only printed the saved formulas.\n\n- **Sales rows:** The Revenue and Commission formulas in each remaining row now point at their own row. The Total row is now row 20 and sums rows 2\u201319.\n- **Summary:** Total revenue and Total commission now point to `Sales!E20` and `Sales!F20`. The North revenue `SUMIF` covers rows 2\u201319.\n- **Named range:** I also changed `SalesRevenue`, which the Average sale formula uses, from `E2:E21` to `E2:E19`.\n\nEverything is still a live formula, and the file is saved in place as `book.xlsx`.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "default",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__default__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.2,
+    "tool_calls": 2,
+    "cost_usd": 0.0303462,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows (original rows 8 and 15) from the Sales sheet. The rows below moved up, so the data now runs from row 2 to row 19 and the Total row is row 20. I didn't recalculate the workbook or open it in Excel, so the formulas and totals are untested. A check after the save only printed the last Sales rows, and they look right.\n\n- **Row formulas:** the Revenue and Commission formulas in rows 2\u201319 are rewritten to point at their own rows.\n- **Totals:** the Total row now sums rows 2\u201319 as live `SUM` formulas.\n- **Named range:** `SalesRevenue` now covers `Sales!$E$2:$E$19`. The Average sale figure uses it.\n- **Summary:** the North revenue `SUMIF` now covers rows 2\u201319. Total revenue and Total commission already read from the Total row, so they follow it automatically.\n\nThe file is saved in place as `book.xlsx`.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3=0 (expected 76267); Summary!B4=0 (expected 4,576); Summary!B7='No' (expected 'Yes')"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "the result no longer depends on Sales!C2 (the link is broken)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 9,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 12.1,
+    "tool_calls": 5,
+    "cost_usd": 0.0381754,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows from the Sales sheet (original rows 8 and 15) and saved `book.xlsx` in place. The rows below moved up, so the Sales data now ends at row 19 and the totals are in row 20.\n\n- **Formulas:** Tabula's check passed, and I added a check that the Sales revenue total equals the sum of the remaining rows, which also passed. The totals and Summary figures still use live formulas. They now read `SUM(C2:C19)`, `SUM(E2:E19)` and `SUM(F2:F19)`. The Summary formulas and the `SalesRevenue` named range were shifted to match.\n- **Value changes:** The test rows had small values, so the totals dropped slightly. Total revenue went from 76,269 to 76,267, and commission from 4,576.14 to 4,576.02. Average revenue went from 3,813.45 to 4,237.06, because it is now averaged over 18 rows instead of 20.\n\nI also left `edit.tel` in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "tabula",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 13.7,
+    "tool_calls": 6,
+    "cost_usd": 0.0409046,
+    "num_turns": 7,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows (original rows 8 and 15) from the Sales sheet and saved `book.xlsx` in place.\n\n- **Sales:** The rows below moved up. The data now covers rows 2\u201319, and the totals are in row 20: `=SUM(C2:C19)`, `=SUM(E2:E19)` and `=SUM(F2:F19)`.\n- **Summary:** All formulas moved with the rows and are still live. `B3` is `=Sales!E20` and `B4` is `=Sales!F20`. `B6` is `=SUMIF(Sales!A2:A19,\"North\",Sales!E2:E19)`.\n- **Named range:** `SalesRevenue` now covers `Sales!$E$2:$E$19`.\n- **Value changes:** The test rows' units and revenue were removed from the totals, so these figures shifted slightly. `B3` went from 76269 to 76267, `B4` from 4576.14 to 4576.02, and `B5` (the average revenue) from 3813.45 to about 4237.06. That is expected, since the test rows no longer count.\n\n`./tabula check` reported no errors before the change was applied.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "tabula",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 12.4,
+    "tool_calls": 5,
+    "cost_usd": 0.03925100000000001,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I deleted the two TEST rows (rows 8 and 15) from the Sales sheet and saved the result to `book.xlsx`. The rows below moved up, and the Sales data now runs from row 2 to row 19.\n\n- **Formulas:** Tabula rewrote all 30 affected formulas to follow the moved rows, and they are all still live formulas. The Sales totals are now in row 20 (`=SUM(C2:C19)`, `=SUM(E2:E19)`, `=SUM(F2:F19)`).\n- **Summary sheet:** `B3` and `B4` now point at `Sales!E20` and `Sales!F20`. The `B6` `SUMIF` ranges and the `SalesRevenue` named range both shrank to rows 2\u201319.\n- **Figures:** Revenue went from 76,269 to 76,267 and commission from 4,576.14 to 4,576.02, so the test rows had small values. The average revenue in `B5` went from 3,813.45 to about 4,237.06, because it now averages 18 rows instead of 20. These values are Tabula's own calculation, since the file has never been opened in Excel.\n- **Check:** I added a check that `Summary!B3` equals `SUM(Sales!E2:E19)`, and it passed.\n\nI left the edit script in the folder as `edit.tel`.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "default",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.4,
+    "tool_calls": 3,
+    "cost_usd": 0.028334799999999997,
+    "num_turns": 4,
+    "is_error": false,
+    "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. I haven't recalculated or opened the file, so the new values are unchecked. Both are still live formulas, and no other sheet was changed.\n\n- **Total commission (B4):** it pointed at total revenue (`=Sales!E22`). It now reads `=Sales!F22`, the commission total.\n- **North revenue (B6):** the `SUMIF` was matching \"North\" against the Rep column (B), so it would have returned 0. It now matches against the Region column: `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`.\n\nSales rows 8 and 15 are \"Test\" rows with 1 unit at $1. They are included in Total revenue and in Average sale. I left them alone because you said not to change the other sheets, and they may be meant to count.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "default",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__default__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.1,
+    "tool_calls": 3,
+    "cost_usd": 0.026258399999999998,
+    "num_turns": 4,
+    "is_error": false,
+    "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. I haven't opened the file in Excel to check the new values.\n\n- **Total commission (B4):** it pointed at the total revenue cell (`Sales!E22`). It now reads `=Sales!F22`, the commission total.\n- **North revenue (B6):** the SUMIF looked for \"North\" in the Rep column (B), so it would have returned 0. It now looks in the Region column: `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`.\n\nBoth are still live formulas, and I didn't touch the other sheets.\n\nThe Sales data has two \"Test\" rows (rows 8 and 15). They feed into total revenue, total commission and average sale. I left them in because you asked for two fixes and those figures aren't miscalculated, but you may want to decide whether they belong there.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "default",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__default__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 10.0,
+    "tool_calls": 3,
+    "cost_usd": 0.025071999999999997,
+    "num_turns": 4,
+    "is_error": false,
+    "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. I haven't recalculated the workbook or checked the resulting values.\n\n- **Total commission (B4):** it pointed at the total revenue cell (`Sales!E22`). It now reads `=Sales!F22`, the commission total.\n- **North revenue (B6):** the SUMIF tested the Rep column (B), so it could never match \"North\". It now tests the Region column: `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`.\n\nThe other Summary figures and the other sheets are unchanged. The Sales data has two \"Test\" rows (rows 8 and 15) that are included in the totals and the average. I left them alone since you didn't ask about them.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 11.5,
+    "tool_calls": 5,
+    "cost_usd": 0.03663620000000001,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. Both are still live formulas, and nothing on the other sheets changed. Tabula checked the edit and re-read the file after writing. I haven't opened it in Excel.\n\n- **Total commission (`B4`):** It was `=Sales!E22`, which is total revenue. It is now `=Sales!F22`, the commission total, and shows 4576.14 (was 76269).\n- **North revenue (`B6`):** The `SUMIF` was matching \"North\" against the Rep column (`Sales!B`), so it returned 0. It now matches against the Region column (`Sales!A2:A21`) and shows 21816.\n\nThe other Summary figures (total revenue, average sale and target met) were already correct. The edit script is saved as `edit.tel` in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "tabula",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__tabula__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 11.5,
+    "tool_calls": 5,
+    "cost_usd": 0.036252,
+    "num_turns": 6,
+    "is_error": false,
+    "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. Both are still live formulas, and I didn't touch the other sheets.\n\n- **Total commission (`B4`):** it pointed at the revenue total (`Sales!E22`). It now reads `=Sales!F22` and shows 4576.14 instead of 76269.\n- **North revenue (`B6`):** the `SUMIF` tested the Rep column (`Sales!B`), so it matched nothing and returned 0. It now tests the Region column: `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`. It shows 21816.\n\nI didn't change the other Summary figures (`B3`, `B5`, `B7`) because their formulas looked right. The values above are Tabula's predictions; the file hasn't been opened in Excel.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "tabula",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t4_fix_summary__tabula__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 12.4,
+    "tool_calls": 6,
+    "cost_usd": 0.040932600000000006,
+    "num_turns": 7,
+    "is_error": false,
+    "final_message": "I fixed the two wrong Summary figures in `book.xlsx` and saved the file in place. Both are still live formulas, and the other sheets are untouched.\n\n- **Total commission (`Summary!B4`):** it was `=Sales!E22`, which is total revenue. It is now `=Sales!F22`, the commission total, and shows 4576.14.\n- **North revenue (`Summary!B6`):** the SUMIF tested the Rep column (`Sales!B2:B21`) for \"North\", so it returned 0. It now tests the Region column (`Sales!A2:A21`) and shows 21816.\n\nThe check passed with no errors and `apply` re-read the saved file to verify it. The 4576.14 and 21816 are Tabula's predicted values, because the file has no Excel-cached values yet. I didn't open it in Excel.\n\nI left `edit.tel` in the folder.",
+    "permission_denials": 1,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "default",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.1,
+    "tool_calls": 2,
+    "cost_usd": 0.019642,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" in `book.xlsx` and saved it in place. I haven't opened the file in Excel to check the calculated values.\n\n- **Formulas:** I updated the three formulas on Summary that pointed at the old name, in B3, B4 and B6. They now use `'Q3 Sales'!`, and they are still live formulas.\n- **Named range:** `SalesRevenue` now points to `'Q3 Sales'!$E$2:$E$21`. The Summary formula that uses it, `AVERAGE(SalesRevenue)` in B5, needed no change.\n- **Other named ranges:** `TaxRate`, `CommissionRate` and `Target` point to the Inputs sheet, so I left them alone.\n\nI only searched cell contents and defined names. I did not check conditional formatting or data validation rules for references to the old sheet name.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "default",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__default__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 8.5,
+    "tool_calls": 2,
+    "cost_usd": 0.0186956,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" and saved the change to `book.xlsx` in place. I didn't recalculate the workbook or open it in Excel. I only listed the formulas afterwards to check the new references.\n\n- **Formulas:** Summary `B3`, `B4` and `B6` now point to `'Q3 Sales'!\u2026`. They are still live formulas.\n- **Named range:** `SalesRevenue` now refers to `'Q3 Sales'!$E$2:$E$21`, so `AVERAGE(SalesRevenue)` in Summary `B5` still works.\n- **Other names:** The other named ranges point at the Inputs sheet, so I left them alone.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "default",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__default__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 8.9,
+    "tool_calls": 2,
+    "cost_usd": 0.0191032,
+    "num_turns": 3,
+    "is_error": false,
+    "final_message": "I renamed the \"Sales\" sheet to \"Q3 Sales\" and saved `book.xlsx` in place. I didn't reopen the saved file or recalculate it in Excel to check the values.\n\n- **Formulas on Summary:** B3, B4 and B6 now point to `'Q3 Sales'!`. They are still live formulas. For example, B6 is `=SUMIF('Q3 Sales'!A2:A21,\"North\",'Q3 Sales'!E2:E21)`.\n- **Named range:** `SalesRevenue` now refers to `'Q3 Sales'!$E$2:$E$21`. Summary B5, `=AVERAGE(SalesRevenue)`, didn't need editing.\n- **Other names:** `TaxRate`, `CommissionRate` and `Target` point to the Inputs sheet and were left alone.\n\nBefore editing, I searched every sheet for text containing \"Sales\" and checked the defined names. Summary B3, B4, B6 and `SalesRevenue` were the only references.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 11.7,
+    "tool_calls": 4,
+    "cost_usd": 0.031608,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" and saved `book.xlsx` in place.\n\n- **Formulas on Summary:** B3, B4 and B6 now point at `'Q3 Sales'`. B5 and B7 still use the names `SalesRevenue` and `Target`, so they needed no change.\n- **Named range:** `SalesRevenue` now points to `'Q3 Sales'!$E$2:$E$21`. The other names point at Inputs and are unchanged.\n- **Checks:** the tool reported 3 formulas rewritten, and my check that `Summary!B3` equals `'Q3 Sales'!E22` passed. I didn't open the file in Excel.\n\nThe edit script is saved as `edit.tel` in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "tabula",
+    "trial": 2,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__tabula__2",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 9.7,
+    "tool_calls": 4,
+    "cost_usd": 0.031498,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" and saved `book.xlsx` in place.\n\n- **Formulas:** the Summary formulas in B3, B4 and B6 now point at `'Q3 Sales'!\u2026`. They are still live formulas.\n- **Named range:** `SalesRevenue` now points at `'Q3 Sales'!$E$2:$E$21`. The Summary formula `AVERAGE(SalesRevenue)` didn't need to change.\n- **Check:** I added an `expect` that `Summary!B3` equals `'Q3 Sales'!E22`, and it passed. Tabula also re-read the saved file and verified it.\n\nThe edit script is `edit.tel`, left in the folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "tabula",
+    "trial": 3,
+    "driver": "claude",
+    "model": "sonnet",
+    "dir": "demo/runs/live-sonnet/t5_rename_sheet__tabula__3",
+    "returncode": 0,
+    "timed_out": false,
+    "duration_s": 8.0,
+    "tool_calls": 4,
+    "cost_usd": 0.029184599999999998,
+    "num_turns": 5,
+    "is_error": false,
+    "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" and saved `book.xlsx` in place. Tabula applied the edit and re-read the file to verify it.\n\n- **Formulas:** The three formulas on Summary that pointed at Sales now point at 'Q3 Sales': B3, B4 and B6. They're still live formulas.\n- **Named range:** `SalesRevenue` now refers to `'Q3 Sales'!$E$2:$E$21`. Summary!B5, which uses that name, needed no change.\n- **Check:** An `expect` that Summary!B3 equals `'Q3 Sales'!E22` passed.\n\nThe edit script is `edit.tel` in the same folder.",
+    "permission_denials": 0,
+    "model_id": "claude-sonnet-5-5",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  }
+]

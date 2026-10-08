@@ -1,0 +1,18 @@
+{
+  "task": "t3_delete_test_rows",
+  "arm": "tabula",
+  "trial": 2,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__2",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 13.7,
+  "tool_calls": 6,
+  "cost_usd": 0.0409046,
+  "num_turns": 7,
+  "is_error": false,
+  "final_message": "I deleted the two TEST rows (original rows 8 and 15) from the Sales sheet and saved `book.xlsx` in place.\n\n- **Sales:** The rows below moved up. The data now covers rows 2\u201319, and the totals are in row 20: `=SUM(C2:C19)`, `=SUM(E2:E19)` and `=SUM(F2:F19)`.\n- **Summary:** All formulas moved with the rows and are still live. `B3` is `=Sales!E20` and `B4` is `=Sales!F20`. `B6` is `=SUMIF(Sales!A2:A19,\"North\",Sales!E2:E19)`.\n- **Named range:** `SalesRevenue` now covers `Sales!$E$2:$E$19`.\n- **Value changes:** The test rows' units and revenue were removed from the totals, so these figures shifted slightly. `B3` went from 76269 to 76267, `B4` from 4576.14 to 4576.02, and `B5` (the average revenue) from 3813.45 to about 4237.06. That is expected, since the test rows no longer count.\n\n`./tabula check` reported no errors before the change was applied.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "default",
+  "trial": 2,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t2_insert_row__default__2",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 28.2,
+  "tool_calls": 5,
+  "cost_usd": 0.053181599999999996,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I added the West / Dana Lee sale as row 11 of the Sales sheet and saved it to `book.xlsx`. I haven't opened the file in Excel or recalculated it, so the formula results are unchecked. I printed the edited rows after saving, and their formulas look right.\n\n- **New row:** Units is 40 and Unit Price is 125. Revenue is `=C11*D11` and Commission is `=E11*CommissionRate`, the same as the other rows. I copied the formatting from row 10.\n- **Shifted rows:** The old rows 11\u201321 moved down to 12\u201322. I rewrote their Revenue and Commission formulas so each one points at its own row.\n- **Totals:** The Total row is now row 23, and its Units, Revenue and Commission sums cover rows 2\u201322.\n- **Summary sheet:**\n  - Total revenue and Total commission now point at `Sales!E23` and `Sales!F23`.\n  - North revenue now sums rows 2\u201322.\n  - Average sale uses the named range `SalesRevenue`, which I extended to `Sales!$E$2:$E$22`.\n  - Target met? reads Total revenue, so it picks up the new sale too.\n\n**Leftover file:** I left a helper script, `edit.py`, in the folder. My attempt to delete it was refused, so you can remove it.\n\n**Test rows:** The sheet has two \"Test\" rows, 8 and 15 in the original numbering. I left them in place since you didn't mention them, so they still count in the totals.",
+  "permission_denials": 2,
+  "model_id": "claude-sonnet-5-5"
+}

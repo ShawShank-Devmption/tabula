@@ -1,0 +1,13 @@
+tabula: /Users/shashankbhat/Projects/compiler_project/demo/reference/t4_fix_summary.tel on book.xlsx
+
+APPLIED: wrote book.xlsx (2 cells synced, re-read and verified).
+
+writes (2)
+  Summary!B4       =Sales!F22  -> 4576.14   [was =Sales!E22]
+  Summary!B6       =SUMIF(Sales!A2:A21,"North",Sales!E2:E21)  -> 21816   [was =SUMIF(Sales!B2:B21,"North",Sales!E2:E21)]
+
+expects
+  line 6    Summary!B4 = Sales!E22*CommissionRate    PASS
+
+stats: 4 statements -> 3 ops (0 dead writes removed); 2 of 48 formulas recomputed in 0.051 ms
+sha256: 67de1b00c761fa36d9a5b0faefe4f921c554a7dc2df8878547b4114bc25ba0ee

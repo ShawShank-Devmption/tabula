@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "tabula",
+  "trial": 2,
+  "driver": "claude",
+  "model": "haiku",
+  "dir": "demo/runs/live-haiku/t2_insert_row__tabula__2",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 65.6,
+  "tool_calls": 8,
+  "cost_usd": 0.0656643,
+  "num_turns": 9,
+  "is_error": false,
+  "final_message": "Perfect! All changes have been applied successfully. Here's a summary of what changed:\n\n**Changes made to book.xlsx:**\n\n1. **Inserted new row 11 in Sales sheet** with Dana Lee's sale:\n   - Region: \"West\"\n   - Rep: \"Dana Lee\"\n   - Units: 40\n   - Unit Price: 125\n   - Revenue: =C11*D11 \u2192 5000 (formula)\n   - Commission: =E11*CommissionRate \u2192 300 (formula)\n\n2. **All formulas automatically updated**:\n   - Sales totals moved to row 23 (from row 22) with new values: 657 units, $81,269 revenue, $4,876.14 commission\n   - Summary sheet now shows updated figures:\n     - Total revenue: $81,269 (was $76,269, +$5,000)\n     - Total commission: $4,876.14 (was $4,576.14, +$300)\n     - Average sale: $3,869.95 (updated across 21 sales)\n     - North revenue: $21,816 (SUMIF range auto-expanded)\n     - Target met: Yes\n\nAll calculated values remain as live Excel formulas (not static numbers), and the file has been saved in place as book.xlsx.",
+  "permission_denials": 0,
+  "model_id": "claude-haiku-4-5-20251001"
+}

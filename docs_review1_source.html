@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tabula — Phase 1 Review Report</title>
+<style>
+  @page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; }
+  body {
+    font-family: "Times New Roman", Georgia, serif;
+    font-size: 11.5pt; line-height: 1.45; color: #1a1a1a; margin: 0;
+  }
+  h1, h2, h3 { font-family: "Helvetica Neue", Arial, sans-serif; color: #14213d; }
+  h1 { font-size: 17pt; margin: 0 0 2mm; }
+  h2 { font-size: 13.5pt; border-bottom: 1.5px solid #14213d; padding-bottom: 1.5mm; margin: 9mm 0 3mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 2mm; }
+  p { margin: 0 0 2.6mm; text-align: justify; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm; font-size: 10.3pt; }
+  th, td { border: 0.6pt solid #666; padding: 1.6mm 2.2mm; vertical-align: top; text-align: left; }
+  th { background: #eef1f6; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9.8pt; }
+  code, pre { font-family: "Menlo", "Consolas", monospace; }
+  code { font-size: 9.8pt; background: #f3f4f6; padding: 0 1mm; border-radius: 1px; }
+  pre {
+    font-size: 9.2pt; line-height: 1.35; background: #f7f8fa; border: 0.6pt solid #ccc;
+    padding: 3mm; margin: 2mm 0 4mm; white-space: pre; overflow: hidden;
+  }
+  .avoid-break { break-inside: avoid; }
+  .page-break { break-before: page; }
+
+  /* ---------- Title page ---------- */
+  .titlepage { min-height: 240mm; display: flex; flex-direction: column; text-align: center; }
+  .tp-univ { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 13pt; letter-spacing: 1px; margin-top: 8mm; }
+  .tp-course { font-size: 12pt; margin-top: 3mm; }
+  .tp-rule { width: 60mm; border: 0; border-top: 1.2pt solid #14213d; margin: 14mm auto 12mm; }
+  .tp-doc { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 12pt; letter-spacing: 2px; color: #555; }
+  .tp-title { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 19pt; font-weight: bold; color: #14213d; margin: 8mm 14mm; line-height: 1.35; }
+  .tp-sub { font-size: 11.5pt; font-style: italic; color: #444; margin: 0 20mm; }
+  .tp-meta { margin-top: auto; margin-bottom: 10mm; }
+  .tp-meta table { width: 96mm; margin: 0 auto; font-size: 11pt; }
+  .tp-meta td { border: none; padding: 1mm 2mm; text-align: left; }
+  .tp-meta td:first-child { color: #555; width: 38mm; }
+
+  /* ---------- Pipeline diagram ---------- */
+  .pipe { display: flex; align-items: stretch; margin: 3mm 0; }
+  .pipe .stage {
+    flex: 1; border: 0.9pt solid #14213d; border-radius: 2px; padding: 2mm 1.5mm;
+    font-family: "Helvetica Neue", Arial, sans-serif; font-size: 8.6pt; text-align: center; background: #eef1f6;
+  }
+  .pipe .stage b { display: block; font-size: 9.2pt; margin-bottom: 0.8mm; }
+  .pipe .arr { align-self: center; padding: 0 1.2mm; font-size: 11pt; color: #14213d; }
+  .layerbox { border: 1pt solid #888; border-radius: 3px; padding: 3mm 3mm 1mm; margin: 3mm 0; }
+  .layerbox .lb-title { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9.5pt; font-weight: bold; color: #555; letter-spacing: 1px; margin-bottom: 2mm; }
+  .src { font-size: 7.6pt; line-height: 1.28; page-break-inside: auto;
+         white-space: pre-wrap; overflow-wrap: anywhere; }
+  .src-h { font-size: 10.5pt; margin: 6mm 0 1.5mm; }
+  .src-desc { font-weight: normal; font-size: 9.5pt; color: #555; }
+  .footer-note { font-size: 9pt; color: #666; margin-top: 1mm; }
+</style>
+</head>
+<body>
+
+<!-- ================= TITLE PAGE ================= -->
+<div class="titlepage">
+  <div class="tp-univ">SCHOOL OF COMPUTER SCIENCE AND ENGINEERING</div>
+  <div class="tp-course">BCSE307P — Compiler Design Laboratory &nbsp;·&nbsp; Fall Semester 2026–27</div>
+  <hr class="tp-rule">
+  <div class="tp-doc">PHASE 1 — REVIEW 1 REPORT<br>PROBLEM DEFINITION AND SYSTEM DESIGN</div>
+  <div class="tp-title">Tabula: A Spreadsheet Engine with a Compiled Formula Language, Dependency-Graph Analysis, and Incremental Recomputation</div>
+  <div class="tp-sub">An individual Compiler Design laboratory project implementing a complete formula compiler
+  (lexer, parser, semantic analyzer, optimizer, bytecode generator, and evaluation VM) together with
+  whole-sheet static analysis: dependency extraction, circular-reference detection, and minimal recomputation.</div>
+  <div class="tp-meta">
+    <table>
+      <tr><td>Student Name</td><td><b>Shashank Bhat M</b></td></tr>
+      <tr><td>Registration No.</td><td><b>24BDS0390</b></td></tr>
+      <tr><td>Programme</td><td>B.Tech — Computer Science and Engineering</td></tr>
+      <tr><td>Course</td><td>BCSE307P Compiler Design Laboratory</td></tr>
+      <tr><td>Faculty Guide</td><td>Prof. Ranjithkumar</td></tr>
+      <tr><td>Date</td><td>September 2026</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ================= ABSTRACT ================= -->
+<div class="page-break"></div>
+<h2>1. Abstract</h2>
+<p>Spreadsheets are the most widely used end-user programming environment in the world, yet the language-processing
+machinery that powers them is rarely examined: every cell formula must be tokenized, parsed, semantically checked,
+compiled, and — critically — re-evaluated efficiently and in the correct order whenever any cell it depends on
+changes. This project, <b>Tabula</b>, implements that machinery from scratch as a transparent, fully inspectable
+system. Each formula (e.g. <code>=SUM(A1:B4)*rate</code>) passes through a complete, hand-written compiler
+pipeline: lexical analysis, recursive-descent/Pratt parsing into an abstract syntax tree, semantic analysis against
+a function registry and a named-range symbol table, AST-level optimization (constant folding, algebraic
+simplification, branch elimination), and code generation to a custom stack-machine bytecode executed by a small
+evaluation VM with faithful spreadsheet error-value semantics (<code>#DIV/0!</code>, <code>#NAME?</code>,
+<code>#REF!</code>, <code>#VALUE!</code>, <code>#CYCLE!</code>). Above the per-formula pipeline, a sheet-level
+engine performs whole-program static analysis: it extracts every formula’s cell dependencies during compilation,
+maintains a bidirectional dependency graph, detects circular references (reporting the actual cycle path), and
+performs <b>incremental recomputation</b> — after any edit, only the transitive dependents of the edited cell are
+re-evaluated, in topological order. An <code>explain</code> command exposes every intermediate artifact of any
+cell’s compilation, making the system its own teaching tool. The engine is implemented in pure Python with no
+parser generators or expression libraries, and is validated by unit, scenario, and benchmark tests, including the
+invariant that incremental results always equal a full recomputation.</p>
+
+<!-- ================= PROBLEM STATEMENT ================= -->
+<h2>2. Problem Statement</h2>
+<p>A spreadsheet is, computationally, a network of thousands of tiny interdependent programs. Supporting it
+correctly requires solving a genuinely compiler-shaped problem with two layers:</p>
+<ol>
+  <li><b>Per-formula:</b> each formula is source code in a small expression language and must be lexed, parsed,
+  checked for semantic validity (unknown functions, wrong argument counts, invalid references), compiled, and
+  evaluated — with errors contained so that one malformed cell never corrupts the rest of the sheet.</li>
+  <li><b>Per-sheet:</b> the collection of formulas induces a dependency graph. The engine must detect circular
+  references, order evaluation so every cell is computed after its inputs, and — because sheets are edited
+  interactively — avoid the naïve strategy of recomputing all <i>N</i> cells on every keystroke, which scales as
+  O(<i>N</i>) per edit and makes large sheets unusable.</li>
+</ol>
+<p>No compact, transparent, single-student implementation exists that demonstrates how these two layers work
+together. Commercial engines (Microsoft Excel, Google Sheets) solve the problem at scale but are closed and
+internally invisible; textbook compiler projects, conversely, compile one standalone program and never encounter
+incremental, graph-structured recomputation. <b>The problem addressed by this project is to design and build a
+complete, observable spreadsheet engine in which both the formula compiler and the dependency-driven incremental
+recomputation are implemented from first principles and can be inspected at every stage.</b></p>
+
+<!-- ================= MOTIVATION ================= -->
+<h2>3. Motivation</h2>
+<ul>
+  <li><b>Compiler concepts with a visible payoff.</b> Every classical phase — scanning, parsing, symbol tables,
+  semantic checking, IR, optimization, code generation, interpretation — is exercised by a system whose behavior a
+  reviewer can verify instantly by editing a cell and watching exactly the right cells update.</li>
+  <li><b>Beyond the single-program compiler.</b> Spreadsheet recalculation is one of the few settings where
+  classical compilation meets <i>incremental computation</i> and whole-program dependency analysis: cycle detection
+  is a semantic check over the entire sheet, and topological scheduling decides evaluation order. These are
+  concepts an ordinary course project never reaches.</li>
+  <li><b>Measurable optimization.</b> The project yields quantitative results required in later reviews: “editing
+  one cell of a 10,000-formula sheet recomputed 14 cells, not 10,000”, and “constant folding removed <i>k</i>
+  bytecode instructions and <i>e</i> dependency edges on the corpus”.</li>
+  <li><b>Familiarity of the domain.</b> Every evaluator knows Excel. The demonstration requires no explanation of
+  <i>what</i> the system is — attention goes entirely to <i>how</i> it works.</li>
+</ul>
+
+<!-- ================= OBJECTIVES ================= -->
+<h2>4. Objectives</h2>
+<ol>
+  <li>Design the Tabula formula language: token set, EBNF grammar, operator precedence, type-coercion rules,
+  spreadsheet error-value semantics, and a library of ≈ 20 built-in functions.</li>
+  <li>Implement a hand-written <b>lexer</b> for formulas — cell references (<code>A1</code>, <code>$B$2</code>),
+  ranges (<code>A1:B4</code>), numbers, strings, booleans, operators — with position-tracked lexical error
+  reporting.</li>
+  <li>Implement a <b>recursive-descent parser</b> with Pratt precedence climbing producing an abstract syntax tree,
+  reporting syntax errors with caret-annotated positions.</li>
+  <li>Implement <b>semantic analysis</b>: a function registry and named-range <b>symbol table</b>, unknown-name
+  detection, arity and argument-kind checking, reference-bounds validation, and extraction of each formula’s
+  precedent (dependency) set.</li>
+  <li>Maintain a sheet-level <b>dependency graph</b>; detect <b>circular references</b> and mark all cells of a
+  cycle <code>#CYCLE!</code> with the cycle path reported.</li>
+  <li>Implement <b>optimization</b>: constant folding, algebraic simplification, and constant-condition branch
+  elimination at the AST level, plus a bytecode peephole pass — each measurable and toggleable.</li>
+  <li>Compile formulas to <b>stack-machine bytecode</b> and implement the <b>evaluation VM</b> with error-value
+  propagation and short-circuit <code>IF</code>/<code>AND</code>/<code>OR</code>.</li>
+  <li>Implement <b>incremental recomputation</b>: dirty-set closure over the dependency graph and re-evaluation in
+  topological order, with per-edit statistics.</li>
+  <li>Provide an interactive REPL (<code>set</code>, <code>show</code>, <code>explain</code>, <code>deps</code>,
+  <code>stats</code>, load/save) and a single-file HTML report of any sheet and any cell’s full compilation
+  pipeline.</li>
+  <li>Validate the system with unit, scenario, and benchmark tests, including corpus-wide invariants
+  (incremental ≡ full recomputation; optimizer on/off value-equivalence).</li>
+</ol>
+
+<!-- ================= SCOPE ================= -->
+<h2>5. Scope</h2>
+<h3>5.1 In Scope</h3>
+<table>
+  <tr><th style="width:30mm">Area</th><th>Contents</th></tr>
+  <tr><td>Formula language</td><td>Number/string/boolean literals; relative and absolute cell references; ranges;
+  named ranges; operators <code>+ − * / % ^</code> (arithmetic), <code>&amp;</code> (concatenation),
+  <code>= &lt;&gt; &lt; &lt;= &gt; &gt;=</code> (comparison), unary minus; function calls; parentheses.</td></tr>
+  <tr><td>Function library</td><td><code>SUM AVG MIN MAX COUNT COUNTIF ROUND ABS SQRT MOD POWER IF AND OR NOT LEN
+  CONCAT UPPER LOWER TRIM ISNUMBER ISBLANK</code></td></tr>
+  <tr><td>Compiler</td><td>Lexer; parser + AST; semantic analyzer + symbol tables; AST optimizer; bytecode
+  generator + peephole.</td></tr>
+  <tr><td>Engine</td><td>Sparse grid (A–ZZ × 1–10 000); dependency graph; cycle detection; full and incremental
+  recomputation; error-value propagation.</td></tr>
+  <tr><td>Runtime</td><td>Stack VM; all five error values; runtime error localization.</td></tr>
+  <tr><td>Tooling</td><td>REPL/CLI; per-cell <code>explain</code>; dependency queries; recompute statistics;
+  TSV load/save; HTML report.</td></tr>
+  <tr><td>Quality</td><td>pytest suite; example and benchmark sheet corpus; user instructions.</td></tr>
+</table>
+<h3>5.2 Out of Scope (future enhancements)</h3>
+<p>Graphical UI (the CLI grid and HTML report are the interfaces); volatile functions (<code>NOW()</code>,
+<code>RAND()</code>) and date/time types; cross-sheet references; row/column insertion with reference rewriting;
+array/spill formulas and user-defined functions; charting, formatting, undo/redo, and concurrent editing.</p>
+
+<!-- ================= BACKGROUND ================= -->
+<h2>6. Background Study</h2>
+<h3>6.1 Compiler pipeline for expression languages</h3>
+<p>The classical phase structure — lexical analysis, syntax analysis, semantic analysis, intermediate
+representation, optimization, code generation, and execution (Aho et&nbsp;al. [1]) — applies directly to formula
+languages, with the simplification that a formula is a single expression rather than a statement sequence. For
+parsing, <b>Pratt’s top-down operator-precedence method</b> [2] is the standard technique for expression grammars
+with many precedence levels and mixed associativity (Tabula has seven tiers, with right-associative
+<code>^</code>); it integrates naturally into a hand-written recursive-descent parser and is well documented in
+modern treatments such as Nystrom [3].</p>
+<h3>6.2 Spreadsheet implementation technology</h3>
+<p>Sestoft [4] gives the authoritative account of spreadsheet internals: formulas compiled per cell, a
+<b>support/dependency graph</b> maintained between cells, evaluation ordered by that graph, and recalculation
+performed either fully or minimally. Real engines follow the same shape — Excel maintains dependency chains and a
+“dirty” marking scheme so that recalculation touches only cells downstream of an edit [5]. Circular references are
+detected as cycles in the dependency graph, and error conditions are represented as first-class <i>error values</i>
+(<code>#DIV/0!</code>, <code>#NAME?</code>, …) that propagate through arithmetic rather than aborting evaluation
+— a semantics Tabula reproduces faithfully.</p>
+<h3>6.3 Graph algorithms</h3>
+<p>Cycle detection uses depth-first search with the standard three-color scheme (a back edge to a “gray” vertex
+proves a cycle) [6]; evaluation order uses <b>Kahn’s topological-sorting algorithm</b> [7] restricted to the dirty
+subgraph. Both are implemented iteratively so that dependency chains thousands of cells deep cannot exhaust
+Python’s recursion limit.</p>
+<h3>6.4 Existing systems compared</h3>
+<table>
+  <tr><th>System</th><th>What it demonstrates</th><th>Gap this project fills</th></tr>
+  <tr><td>Excel / Google Sheets</td><td>Industrial dependency-driven recalculation</td><td>Closed source; machinery invisible</td></tr>
+  <tr><td>Spreadsheet libraries (e.g. formula parsers)</td><td>Parsing only</td><td>No semantic analysis, optimization, IR, or incremental engine</td></tr>
+  <tr><td>Course compiler projects</td><td>Full pipeline on one program</td><td>No multi-program dependency analysis or incrementality</td></tr>
+  <tr><td><b>Tabula</b></td><td>Full pipeline per formula <i>plus</i> whole-sheet analysis, all inspectable</td><td>—</td></tr>
+</table>
+
+<!-- ================= CONCEPTS ================= -->
+<h2>7. Compiler Design Concepts Involved</h2>
+<table>
+  <tr><th style="width:52mm">Course concept</th><th>Where it appears in Tabula</th></tr>
+  <tr><td>Lexical analysis, token classification</td><td>Hand-written formula scanner: references, ranges, literals, operators, maximal munch</td></tr>
+  <tr><td>Context-free grammars (EBNF)</td><td>Formula grammar (§10.2), seven precedence tiers</td></tr>
+  <tr><td>Top-down parsing, operator precedence</td><td>Recursive descent with Pratt precedence climbing</td></tr>
+  <tr><td>Error detection and recovery</td><td>Positioned lexical/syntax diagnostics with caret excerpts; per-cell containment — a bad formula becomes an error value, never corrupts the sheet</td></tr>
+  <tr><td>Abstract syntax trees</td><td>Formula AST; visitor-based checking, optimization, and code generation passes</td></tr>
+  <tr><td>Symbol table management</td><td>Function registry (arity, parameter kinds, purity); named-range table with declare/resolve/redefine</td></tr>
+  <tr><td>Semantic analysis</td><td>Name resolution, arity/kind checking, static type checks, reference-bounds validation; <b>cycle detection as a whole-program semantic check</b></td></tr>
+  <tr><td>Dependency / dataflow analysis</td><td>Precedent extraction per formula; bidirectional dependency graph; transitive dirty-set closure</td></tr>
+  <tr><td>Intermediate representation</td><td>Stack-machine bytecode per formula with constant and reference pools (explicit AST → IR lowering)</td></tr>
+  <tr><td>Code optimization</td><td>Constant folding, algebraic simplification, branch elimination (AST); peephole (bytecode); incremental recomputation as computation-level optimization</td></tr>
+  <tr><td>Target code generation</td><td>Post-order AST walk emitting bytecode; short-circuit <code>IF/AND/OR</code> compiled to jumps</td></tr>
+  <tr><td>Interpretation and runtime environments</td><td>Stack VM over the grid as its store; error-value runtime semantics</td></tr>
+  <tr><td>Scheduling / topological ordering</td><td>Kahn’s algorithm over the dirty subgraph for recomputation order</td></tr>
+</table>
+
+<!-- ================= METHODOLOGY ================= -->
+<h2>8. Proposed Methodology</h2>
+<p>The system is built as <b>two cooperating layers</b>, developed and tested bottom-up across the three course
+phases.</p>
+<h3>8.1 Micro layer — the per-formula compiler</h3>
+<p>Run whenever a cell’s formula is set: <i>lexer → parser → semantic analyzer → AST optimizer → bytecode
+generator → chunk</i>. The semantic pass simultaneously extracts the formula’s <b>precedent set</b> (all cells and
+ranges it reads), which is the interface to the macro layer. Optimization runs before final precedent extraction,
+so a folded branch such as <code>=IF(FALSE, B1, 7)</code> ends with <i>no</i> dependency on <code>B1</code> — the
+optimizer visibly changes the dependency graph, not merely execution speed.</p>
+<h3>8.2 Macro layer — the sheet engine</h3>
+<p>On every edit: (1) compile the formula through the micro layer; (2) update the dependency graph edges by
+diffing old and new precedents; (3) run cycle detection from the edited cell, marking any cycle’s members
+<code>#CYCLE!</code> with the path reported; (4) compute the dirty set as the transitive dependents of the edited
+cell; (5) re-evaluate only the dirty set, in Kahn topological order; (6) record statistics (cells recomputed vs.
+total, VM instructions, elapsed time). A full recomputation is the same code path with the dirty set equal to all
+formula cells — one algorithm, exercised two ways.</p>
+<h3>8.3 Correctness discipline</h3>
+<p>Two corpus-wide invariants are enforced by tests from the first phase onward: (i) after any edit script, the
+incrementally maintained grid equals a from-scratch evaluation of the entire sheet; (ii) enabling or disabling the
+optimizer never changes any cell value. Error handling follows real-spreadsheet semantics: errors are typed
+values that propagate through dependent formulas; the engine process itself never crashes on any input.</p>
+
+<!-- ================= ARCHITECTURE ================= -->
+<h2 class="avoid-break">9. System Architecture</h2>
+<div class="avoid-break">
+<div class="layerbox">
+  <div class="lb-title">MICRO LAYER — FORMULA COMPILER (runs per cell edit)</div>
+  <div class="pipe">
+    <div class="stage"><b>Lexer</b>tokens with positions</div><div class="arr">→</div>
+    <div class="stage"><b>Parser</b>Pratt · AST</div><div class="arr">→</div>
+    <div class="stage"><b>Semantic Analyzer</b>symbol tables · types · precedent set</div><div class="arr">→</div>
+    <div class="stage"><b>AST Optimizer</b>fold · simplify · branch-eliminate</div><div class="arr">→</div>
+    <div class="stage"><b>Bytecode Gen</b>+ peephole → Chunk</div>
+  </div>
+</div>
+<div class="layerbox">
+  <div class="lb-title">MACRO LAYER — SHEET ENGINE (orchestrates recomputation)</div>
+  <div class="pipe">
+    <div class="stage"><b>Edit Controller</b>set / get / load</div><div class="arr">→</div>
+    <div class="stage"><b>Dependency Graph</b>precedents ⇄ dependents</div><div class="arr">→</div>
+    <div class="stage"><b>Cycle Detector</b>DFS coloring · #CYCLE!</div><div class="arr">→</div>
+    <div class="stage"><b>Scheduler</b>dirty closure · Kahn order</div><div class="arr">→</div>
+    <div class="stage"><b>Evaluation VM</b>stack machine · error values</div><div class="arr">→</div>
+    <div class="stage"><b>Grid</b>sparse cells · values</div>
+  </div>
+</div>
+<p class="footer-note">Every micro-layer artifact tees into the <code>explain</code>/HTML visualizer; every stage
+reports positioned diagnostics into a shared diagnostics module.</p>
+</div>
+
+<h3>9.1 Module decomposition</h3>
+<pre>tabula/
+├── cli.py            REPL: commands, grid rendering
+├── diagnostics.py    positioned errors, caret excerpts
+├── refs.py           CellRef/RangeRef parse · format · bounds
+├── values.py         value model: Number/Text/Boolean/Blank/Error
+├── lexer/            token.py, lexer.py
+├── parser/           ast.py, parser.py
+├── sema/             functions.py (registry), names.py (named ranges), checker.py
+├── opt/              passes.py (fold / simplify / branch-eliminate)
+├── codegen/          bytecode.py (OpCodes, Chunk, peephole)
+├── vm/               vm.py (stack evaluation)
+├── engine/           cell.py · grid.py (TSV load/save) · graph.py (edges,
+│                     cycles, closure, Kahn) · engine.py (edit controller, stats)
+├── viz/              explain.py (per-cell dumps) · report.py (HTML report)
+├── tests/            unit · scenario · benchmark
+└── examples/         budget.tsv, grades.tsv, …</pre>
+<p><b>Dependency rule:</b> micro-layer packages depend only on earlier stages plus shared value/reference/diagnostic
+modules; the engine consumes the micro layer as a black box (<code>compile_formula(text) → Chunk | diagnostics</code>);
+the visualizer depends on everything and nothing depends on it.</p>
+
+<!-- ================= LANGUAGE SPEC ================= -->
+<h2>10. Language Specification (summary)</h2>
+<h3>10.1 Tokens</h3>
+<table>
+  <tr><th style="width:34mm">Class</th><th>Pattern / members</th></tr>
+  <tr><td>Cell reference</td><td><code>[$]?[A-Z]{1,2}[$]?[0-9]+</code> — <code>A1</code>, <code>$B$2</code>, <code>AA10</code>; bounds A–ZZ × 1–10 000</td></tr>
+  <tr><td>Range</td><td><code>ref ':' ref</code> — combined by the parser</td></tr>
+  <tr><td>Number / String / Boolean</td><td><code>12</code>, <code>3.5</code>, <code>.5</code>; <code>"text"</code> with <code>""</code> escape; <code>TRUE</code>/<code>FALSE</code></td></tr>
+  <tr><td>Identifier</td><td>function name or named range, case-insensitive</td></tr>
+  <tr><td>Operators / delimiters</td><td><code>+ − * / % ^ &amp; = &lt;&gt; &lt; &lt;= &gt; &gt;= ( ) , :</code></td></tr>
+</table>
+<h3 class="avoid-break">10.2 Grammar (EBNF)</h3>
+<pre class="avoid-break">formula        = "=" expression EOF ;
+expression     = comparison ;
+comparison     = concat { ( "=" | "&lt;&gt;" | "&lt;" | "&lt;=" | "&gt;" | "&gt;=" ) concat } ;
+concat         = additive { "&amp;" additive } ;
+additive       = multiplicative { ( "+" | "-" ) multiplicative } ;
+multiplicative = power { ( "*" | "/" | "%" ) power } ;
+power          = unary [ "^" power ] ;                (* right-associative *)
+unary          = "-" unary | primary ;
+primary        = NUMBER | STRING | BOOLEAN | range | CELLREF | IDENT
+               | IDENT "(" [ args ] ")" | "(" expression ")" ;
+range          = CELLREF ":" CELLREF ;
+args           = expression { "," expression } ;</pre>
+<h3>10.3 Semantics highlights</h3>
+<ul>
+  <li><b>Types:</b> Number, Text, Boolean, Blank, Error; Range only as an argument to range-accepting functions
+  (<code>=A1:B2 + 1</code> is a semantic error).</li>
+  <li><b>Coercions:</b> Blank → 0/"" by context; Boolean → 1/0 numerically; Text never implicitly numeric
+  (<code>="2"+1</code> ⇒ <code>#VALUE!</code>); <code>&amp;</code> coerces to Text.</li>
+  <li><b>Error values:</b> <code>#NAME?</code> unknown function/name · <code>#REF!</code> out-of-bounds reference ·
+  <code>#VALUE!</code> type error · <code>#DIV/0!</code> division/modulo by zero · <code>#CYCLE!</code> circular
+  reference (path reported). Any error operand makes the result that error; <code>IF</code> evaluates only the
+  taken branch; <code>COUNT</code>, <code>ISNUMBER</code>, <code>ISBLANK</code> follow their per-function policies.</li>
+</ul>
+
+<!-- ================= TECHNOLOGY ================= -->
+<h2>11. Technology Stack</h2>
+<table>
+  <tr><th style="width:36mm">Category</th><th style="width:44mm">Choice</th><th>Justification</th></tr>
+  <tr><td>Implementation language</td><td>Python 3.11+</td><td>Recommended by the course manual; concise for tree- and graph-heavy code</td></tr>
+  <tr><td>Parser construction</td><td>Hand-written (no Lex/Yacc/Bison/ANTLR)</td><td>Every algorithm individually implemented and explainable in viva; full control of error messages</td></tr>
+  <tr><td>Expression evaluation</td><td>Own bytecode VM (Python <code>eval</code> prohibited by design)</td><td>Genuine code-generation and interpretation phases</td></tr>
+  <tr><td>Testing</td><td>pytest</td><td>Unit, scenario (edit-script), and benchmark tests</td></tr>
+  <tr><td>Version control</td><td>Git + GitHub (private)</td><td>Required by manual; commit history as development log</td></tr>
+  <tr><td>Editor / OS</td><td>VS Code · macOS/Linux/Windows</td><td>Portable, standard-library-only runtime</td></tr>
+</table>
+
+<!-- ================= PROTOTYPE ================= -->
+<h2>12. Initial Implementation (Prototype)</h2>
+<p>The Phase 1 prototype is <b>implemented and working</b>. It realizes the front of the micro layer together with a
+minimal grid and REPL, proving the language design end-to-end before the full engine is built. The code is pure
+Python 3.11 with no third-party runtime dependencies, organized exactly as the architecture of §9.1 prescribes, so
+Phase 2 and 3 modules slot in without restructuring.</p>
+
+<h3>12.1 Implemented modules</h3>
+<table>
+  <tr><th style="width:34mm">Module</th><th style="width:16mm">Lines</th><th>Contents</th></tr>
+  <tr><td><code>tabula/refs.py</code></td><td>70</td><td>Cell/range references: <code>A1</code>, <code>$B$2</code>, <code>AA10</code> parsing and formatting, column↔index conversion, bounds enforcement (A–ZZ × 1–10 000), range cell enumeration</td></tr>
+  <tr><td><code>tabula/values.py</code></td><td>66</td><td>Value model (Number, Text, Boolean, Blank) and the five error values; coercion rules (<code>to_number</code>, <code>to_text</code>) and display formatting</td></tr>
+  <tr><td><code>tabula/lexer.py</code></td><td>119</td><td>Hand-written scanner: all token classes, maximal munch for <code>&lt;= &gt;= &lt;&gt;</code>, doubled-quote string escapes, reference-vs-identifier classification, positioned lexical errors</td></tr>
+  <tr><td><code>tabula/parser.py</code></td><td>197</td><td>Pratt precedence-climbing parser over the §10.2 grammar, AST node definitions, and the box-drawing AST printer used by <code>explain</code></td></tr>
+  <tr><td><code>tabula/evaluator.py</code></td><td>157</td><td>Direct AST evaluation over the grid with error propagation, lazy <code>IF</code> branches, range flattening, and active-cell cycle detection <i>(interim — replaced by the bytecode VM in Phase 3)</i></td></tr>
+  <tr><td><code>tabula/engine.py</code></td><td>108</td><td>Grid, edit controller (<code>set</code>/<code>value</code>), caret diagnostics, grid renderer, and <code>explain</code></td></tr>
+  <tr><td><code>tabula/cli.py</code></td><td>77</td><td>REPL with interactive and batch (script) modes</td></tr>
+  <tr><td><code>tests/</code></td><td>220</td><td>49 tests: lexer (token classes, escapes, maximal munch, errors), parser (precedence/associativity table, error positions), evaluator (semantics, coercions, all error values, cycles, containment)</td></tr>
+</table>
+
+<h3 class="avoid-break">12.2 Representative code — the Pratt parsing loop</h3>
+<p>Binding powers encode the seven precedence tiers of §10.2; the right-associativity flag is what makes
+<code>=2^3^2</code> evaluate as 2^(3^2) = 512 rather than (2^3)^2 = 64.</p>
+<pre class="avoid-break"><b># tabula/parser.py — binding powers: (left_bp, right_associative)</b>
+_BINARY_BP = {
+    TokType.EQ:   (10, False), TokType.NE: (10, False),
+    TokType.LT:   (10, False), TokType.LE: (10, False),
+    TokType.GT:   (10, False), TokType.GE: (10, False),
+    TokType.AMP:  (20, False),                                  <i># &amp; concatenation</i>
+    TokType.PLUS: (30, False), TokType.MINUS:   (30, False),
+    TokType.STAR: (40, False), TokType.SLASH:   (40, False),
+    TokType.PERCENT: (40, False),
+    TokType.CARET: (50, True),                                  <i># ^ right-associative</i>
+}
+
+def parse_expression(self, min_bp: int = 0):
+    left = self.parse_unary()
+    while True:
+        tok = self.peek()
+        bp = _BINARY_BP.get(tok.type)
+        if bp is None or bp[0] &lt; min_bp:
+            return left
+        self.advance()
+        lbp, right_assoc = bp
+        next_min = lbp if right_assoc else lbp + 1      <i># hold bp if right-assoc</i>
+        right = self.parse_expression(next_min)
+        left = Binary(tok.lexeme, left, right)</pre>
+
+<h3 class="avoid-break">12.3 Captured demonstration session</h3>
+<p>Verbatim output of <code>python3 -m tabula.cli examples/demo.txt</code> — the Review 1 demonstration script:</p>
+<pre class="avoid-break">tabula&gt; set A1 10
+tabula&gt; set A2 25
+tabula&gt; set A3 40
+tabula&gt; set B1 =SUM(A1:A3)*2
+tabula&gt; set B2 =AVG(A1:A3)
+tabula&gt; set B3 =IF(B2&gt;20, "high", "low")
+tabula&gt; show
+     A   B
+1    10  150
+2    25  25
+3    40  high
+tabula&gt; set A2 35                          <i>&larr; edit an input</i>
+tabula&gt; get B1
+B1 = 170   (=SUM(A1:A3)*2)                 <i>&larr; dependent formula updated</i>
+tabula&gt; explain B1
+cell   : B1
+raw    : =SUM(A1:A3)*2
+kind   : formula
+tokens : SUM ( A1 : A3 ) * 2
+types  : IDENT LPAREN CELLREF COLON CELLREF RPAREN STAR NUMBER
+ast    :
+  Binary(*)
+  ├── Call(SUM)
+  │   └── Range(A1:A3)
+  └── Number(2)
+value  : 170
+tabula&gt; set C1 =SUM(A1:A3                  <i>&larr; deliberate syntax error</i>
+error[SyntaxError] in C1: expected ')' after argument list
+  =SUM(A1:A3
+            ^
+tabula&gt; set C2 =10/0
+tabula&gt; set A5 =B5
+tabula&gt; set B5 =A5                         <i>&larr; deliberate circular reference</i>
+tabula&gt; show
+     A        B            C
+1    10       170          #VALUE!
+2    35       28.33333333  #DIV/0!
+3    40       high
+5    #CYCLE!  #CYCLE!</pre>
+<p>The final grid demonstrates the error model of §10.3 in one view: the broken formula in <code>C1</code> yields
+<code>#VALUE!</code>, division by zero in <code>C2</code> yields <code>#DIV/0!</code>, the mutually referencing pair
+<code>A5</code>/<code>B5</code> is detected as a cycle, and every other cell continues to evaluate correctly —
+per-cell error containment working as designed.</p>
+
+<h3 class="avoid-break">12.4 Test results</h3>
+<pre class="avoid-break">$ python3 -m pytest tests/ -q
+.................................................                        [100%]
+49 passed in 0.03s</pre>
+<table>
+  <tr><th style="width:38mm">Test module</th><th style="width:14mm">Tests</th><th>Coverage</th></tr>
+  <tr><td><code>test_lexer.py</code></td><td>15</td><td>Every token class; number forms (<code>12</code>, <code>3.5</code>, <code>.5</code>); doubled-quote escapes; absolute-reference anchors; maximal munch (<code>&lt;=</code> vs <code>&lt;</code>); reference-vs-identifier classification incl. the bound <code>ZZ10000</code>/<code>ZZ10001</code>; token positions; three lexical-error kinds</td></tr>
+  <tr><td><code>test_parser.py</code></td><td>14</td><td>Table-driven precedence and associativity (8 cases incl. right-associative <code>^</code> and unary binding); ranges, calls, nested calls; four syntax errors with asserted message <i>and</i> position</td></tr>
+  <tr><td><code>test_evaluator.py</code></td><td>20</td><td>Expression semantics and coercions; aggregates over ranges; edit propagation; blank-cell handling; lazy <code>IF</code> (proved by an untaken <code>1/0</code> branch); four error values; error propagation; cycle detection; per-cell containment; caret diagnostics</td></tr>
+</table>
+
+<h3>12.5 Status against the phase plan</h3>
+<p>Phase 1 tasks T1.1–T1.10 of the project task plan are complete: repository setup and module skeleton,
+specification freeze, the reference/value/diagnostic infrastructure, the lexer, the Pratt parser, the prototype
+evaluator with REPL, <code>explain</code> v0, and this review pack. The language specification (§10) is frozen as of
+this review.</p>
+<p>Phase 2 proceeds to the function registry and named-range symbol tables, full semantic analysis, precedent
+extraction, the dependency graph with cycle detection, and graph-ordered recomputation; Phase 3 delivers the AST
+optimizer, the bytecode compiler and VM (replacing the interim evaluator), true incremental recomputation with
+benchmark evidence, and the complete visualizer and HTML report.</p>
+
+<!-- ================= EXPECTED OUTCOMES ================= -->
+<h2>13. Expected Outcomes</h2>
+<ol>
+  <li>A working spreadsheet engine evaluating the full function library with faithful error-value semantics.</li>
+  <li>Live circular-reference detection with the cycle path reported, and per-cell error containment.</li>
+  <li>Measured evidence of incrementality (cells recomputed per edit vs. sheet size on 10,000-cell benchmarks)
+  and of optimization (bytecode reduction, dependency edges removed by folding).</li>
+  <li>A per-cell <code>explain</code> pipeline X-ray and a self-contained HTML report of the whole sheet.</li>
+  <li>Complete documentation and tests, with all algorithms individually explainable for the vivas.</li>
+</ol>
+
+<!-- ================= REFERENCES ================= -->
+<h2>14. References</h2>
+<ol style="font-size:10.5pt">
+  <li>A. V. Aho, M. S. Lam, R. Sethi, J. D. Ullman, <i>Compilers: Principles, Techniques, and Tools</i>, 2nd ed., Pearson, 2006.</li>
+  <li>V. R. Pratt, “Top Down Operator Precedence,” <i>Proceedings of the 1st ACM Symposium on Principles of Programming Languages (POPL)</i>, 1973.</li>
+  <li>R. Nystrom, <i>Crafting Interpreters</i>, Genever Benning, 2021. (Pratt parsing and bytecode virtual machines.)</li>
+  <li>P. Sestoft, <i>Spreadsheet Implementation Technology: Basics and Extensions</i>, MIT Press, 2014.</li>
+  <li>Microsoft Learn, “Excel Recalculation,” Office Client Development documentation.</li>
+  <li>T. H. Cormen, C. E. Leiserson, R. L. Rivest, C. Stein, <i>Introduction to Algorithms</i>, 4th ed., MIT Press, 2022. (Depth-first search, cycle detection, topological sort.)</li>
+  <li>A. B. Kahn, “Topological Sorting of Large Networks,” <i>Communications of the ACM</i>, 5(11), 1962.</li>
+</ol>
+
+
+<div class="page-break"></div>
+<h2>Appendix A — Complete Source Code</h2>
+<p>Listings are the verbatim contents of the Phase 1 repository at the time of this review (Python 3.11, standard library only). Line numbers are shown for reference during the viva.</p>
+<h3 class="src-h">A.1 &nbsp;<code>tabula/refs.py</code> <span class="src-desc">— Cell and range references, bounds, column conversion (70 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Cell and range references: parsing, formatting, bounds (A-ZZ x 1-10000).&quot;&quot;&quot;
+  2  from __future__ import annotations
+  3  
+  4  import re
+  5  from dataclasses import dataclass
+  6  
+  7  MAX_ROW = 10_000
+  8  MAX_COL = 26 + 26 * 26  # A..Z, AA..ZZ
+  9  
+ 10  _REF_RE = re.compile(r&quot;^(\$?)([A-Z]{1,2})(\$?)([0-9]+)$&quot;)
+ 11  
+ 12  
+ 13  def col_to_index(letters: str) -&gt; int:
+ 14      &quot;&quot;&quot;&#x27;A&#x27; -&gt; 1, &#x27;Z&#x27; -&gt; 26, &#x27;AA&#x27; -&gt; 27, &#x27;ZZ&#x27; -&gt; 702.&quot;&quot;&quot;
+ 15      n = 0
+ 16      for ch in letters:
+ 17          n = n * 26 + (ord(ch) - ord(&quot;A&quot;) + 1)
+ 18      return n
+ 19  
+ 20  
+ 21  def index_to_col(n: int) -&gt; str:
+ 22      letters = &quot;&quot;
+ 23      while n &gt; 0:
+ 24          n, rem = divmod(n - 1, 26)
+ 25          letters = chr(ord(&quot;A&quot;) + rem) + letters
+ 26      return letters
+ 27  
+ 28  
+ 29  @dataclass(frozen=True)
+ 30  class CellRef:
+ 31      col: int  # 1-based
+ 32      row: int  # 1-based
+ 33      abs_col: bool = False
+ 34      abs_row: bool = False
+ 35  
+ 36      @staticmethod
+ 37      def parse(text: str) -&gt; &quot;CellRef | None&quot;:
+ 38          m = _REF_RE.match(text.upper())
+ 39          if not m:
+ 40              return None
+ 41          dc, letters, dr, digits = m.groups()
+ 42          col, row = col_to_index(letters), int(digits)
+ 43          if row &lt; 1 or row &gt; MAX_ROW or col &gt; MAX_COL:
+ 44              return None
+ 45          return CellRef(col, row, abs_col=dc == &quot;$&quot;, abs_row=dr == &quot;$&quot;)
+ 46  
+ 47      def key(self) -&gt; tuple[int, int]:
+ 48          return (self.col, self.row)
+ 49  
+ 50      def __str__(self) -&gt; str:
+ 51          return (
+ 52              (&quot;$&quot; if self.abs_col else &quot;&quot;) + index_to_col(self.col)
+ 53              + (&quot;$&quot; if self.abs_row else &quot;&quot;) + str(self.row)
+ 54          )
+ 55  
+ 56  
+ 57  @dataclass(frozen=True)
+ 58  class RangeRef:
+ 59      start: CellRef
+ 60      end: CellRef
+ 61  
+ 62      def cells(self):
+ 63          c1, c2 = sorted((self.start.col, self.end.col))
+ 64          r1, r2 = sorted((self.start.row, self.end.row))
+ 65          for col in range(c1, c2 + 1):
+ 66              for row in range(r1, r2 + 1):
+ 67                  yield CellRef(col, row)
+ 68  
+ 69      def __str__(self) -&gt; str:
+ 70          return f&quot;{self.start}:{self.end}&quot;</pre>
+<h3 class="src-h">A.2 &nbsp;<code>tabula/values.py</code> <span class="src-desc">— Value model, error values, coercion and display rules (66 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Value model: numbers, text, booleans, blanks, and spreadsheet error values.&quot;&quot;&quot;
+  2  from __future__ import annotations
+  3  
+  4  from dataclasses import dataclass
+  5  
+  6  
+  7  @dataclass(frozen=True)
+  8  class ErrorValue:
+  9      code: str  # &#x27;#DIV/0!&#x27;, &#x27;#VALUE!&#x27;, &#x27;#REF!&#x27;, &#x27;#NAME?&#x27;, &#x27;#CYCLE!&#x27;
+ 10      detail: str = &quot;&quot;
+ 11  
+ 12      def __str__(self) -&gt; str:
+ 13          return self.code
+ 14  
+ 15  
+ 16  DIV0 = ErrorValue(&quot;#DIV/0!&quot;)
+ 17  VALUE_ERR = ErrorValue(&quot;#VALUE!&quot;)
+ 18  REF_ERR = ErrorValue(&quot;#REF!&quot;)
+ 19  NAME_ERR = ErrorValue(&quot;#NAME?&quot;)
+ 20  CYCLE_ERR = ErrorValue(&quot;#CYCLE!&quot;)
+ 21  
+ 22  BLANK = None  # an empty cell reads as Blank
+ 23  
+ 24  
+ 25  def is_error(v) -&gt; bool:
+ 26      return isinstance(v, ErrorValue)
+ 27  
+ 28  
+ 29  def to_number(v):
+ 30      &quot;&quot;&quot;Coerce a value to a number per Tabula rules; ErrorValue on failure.
+ 31  
+ 32      Blank -&gt; 0, Boolean -&gt; 1/0, Text is never implicitly numeric.
+ 33      &quot;&quot;&quot;
+ 34      if is_error(v):
+ 35          return v
+ 36      if v is BLANK:
+ 37          return 0
+ 38      if isinstance(v, bool):
+ 39          return 1 if v else 0
+ 40      if isinstance(v, (int, float)):
+ 41          return v
+ 42      return VALUE_ERR
+ 43  
+ 44  
+ 45  def to_text(v) -&gt; str | ErrorValue:
+ 46      if is_error(v):
+ 47          return v
+ 48      if v is BLANK:
+ 49          return &quot;&quot;
+ 50      if isinstance(v, bool):
+ 51          return &quot;TRUE&quot; if v else &quot;FALSE&quot;
+ 52      if isinstance(v, float):
+ 53          if v == int(v):
+ 54              return str(int(v))
+ 55          # Spreadsheet-style display: significant digits, no float artefacts.
+ 56          return f&quot;{v:.10g}&quot;
+ 57      return str(v)
+ 58  
+ 59  
+ 60  def display(v) -&gt; str:
+ 61      &quot;&quot;&quot;Human-readable form for the grid renderer.&quot;&quot;&quot;
+ 62      if v is BLANK:
+ 63          return &quot;&quot;
+ 64      if is_error(v):
+ 65          return v.code
+ 66      return to_text(v)</pre>
+<h3 class="src-h">A.3 &nbsp;<code>tabula/lexer.py</code> <span class="src-desc">— Hand-written formula scanner (119 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Hand-written scanner for Tabula formulas.
+  2  
+  3  Tokenizes the text after the leading &#x27;=&#x27;. Every token carries its start
+  4  column within the formula text so diagnostics can point at the exact spot.
+  5  &quot;&quot;&quot;
+  6  from __future__ import annotations
+  7  
+  8  from dataclasses import dataclass
+  9  from enum import Enum, auto
+ 10  
+ 11  from .refs import CellRef
+ 12  
+ 13  
+ 14  class TokType(Enum):
+ 15      NUMBER = auto()
+ 16      STRING = auto()
+ 17      BOOL = auto()
+ 18      CELLREF = auto()
+ 19      IDENT = auto()
+ 20      PLUS = auto(); MINUS = auto(); STAR = auto(); SLASH = auto()
+ 21      PERCENT = auto(); CARET = auto(); AMP = auto()
+ 22      EQ = auto(); NE = auto(); LT = auto(); LE = auto(); GT = auto(); GE = auto()
+ 23      LPAREN = auto(); RPAREN = auto(); COMMA = auto(); COLON = auto()
+ 24      EOF = auto()
+ 25  
+ 26  
+ 27  @dataclass
+ 28  class Token:
+ 29      type: TokType
+ 30      lexeme: str
+ 31      value: object  # parsed literal / CellRef where applicable
+ 32      pos: int       # 0-based start column in the formula text
+ 33  
+ 34  
+ 35  class LexError(Exception):
+ 36      def __init__(self, message: str, pos: int):
+ 37          super().__init__(message)
+ 38          self.message, self.pos = message, pos
+ 39  
+ 40  
+ 41  _SINGLE = {
+ 42      &quot;+&quot;: TokType.PLUS, &quot;-&quot;: TokType.MINUS, &quot;*&quot;: TokType.STAR,
+ 43      &quot;/&quot;: TokType.SLASH, &quot;%&quot;: TokType.PERCENT, &quot;^&quot;: TokType.CARET,
+ 44      &quot;&amp;&quot;: TokType.AMP, &quot;=&quot;: TokType.EQ, &quot;(&quot;: TokType.LPAREN,
+ 45      &quot;)&quot;: TokType.RPAREN, &quot;,&quot;: TokType.COMMA, &quot;:&quot;: TokType.COLON,
+ 46  }
+ 47  
+ 48  
+ 49  def tokenize(text: str) -&gt; list[Token]:
+ 50      toks: list[Token] = []
+ 51      i, n = 0, len(text)
+ 52      while i &lt; n:
+ 53          ch = text[i]
+ 54          if ch.isspace():
+ 55              i += 1
+ 56              continue
+ 57          # -- numbers: 12, 3.5, .5  (maximal munch)
+ 58          if ch.isdigit() or (ch == &quot;.&quot; and i + 1 &lt; n and text[i + 1].isdigit()):
+ 59              start = i
+ 60              while i &lt; n and text[i].isdigit():
+ 61                  i += 1
+ 62              if i &lt; n and text[i] == &quot;.&quot;:
+ 63                  i += 1
+ 64                  while i &lt; n and text[i].isdigit():
+ 65                      i += 1
+ 66              lexeme = text[start:i]
+ 67              toks.append(Token(TokType.NUMBER, lexeme, float(lexeme), start))
+ 68              continue
+ 69          # -- strings: &quot;...&quot; with &quot;&quot; as the escaped quote
+ 70          if ch == &#x27;&quot;&#x27;:
+ 71              start, i, parts = i, i + 1, []
+ 72              while True:
+ 73                  if i &gt;= n:
+ 74                      raise LexError(&quot;unterminated string literal&quot;, start)
+ 75                  if text[i] == &#x27;&quot;&#x27;:
+ 76                      if i + 1 &lt; n and text[i + 1] == &#x27;&quot;&#x27;:  # escaped quote
+ 77                          parts.append(&#x27;&quot;&#x27;)
+ 78                          i += 2
+ 79                          continue
+ 80                      i += 1
+ 81                      break
+ 82                  parts.append(text[i])
+ 83                  i += 1
+ 84              toks.append(Token(TokType.STRING, text[start:i], &quot;&quot;.join(parts), start))
+ 85              continue
+ 86          # -- references, booleans, identifiers
+ 87          if ch.isalpha() or ch in &quot;_$&quot;:
+ 88              start = i
+ 89              while i &lt; n and (text[i].isalnum() or text[i] in &quot;_$.&quot;):
+ 90                  i += 1
+ 91              word = text[start:i]
+ 92              ref = CellRef.parse(word)
+ 93              upper = word.upper()
+ 94              if ref is not None:
+ 95                  toks.append(Token(TokType.CELLREF, word, ref, start))
+ 96              elif upper in (&quot;TRUE&quot;, &quot;FALSE&quot;):
+ 97                  toks.append(Token(TokType.BOOL, word, upper == &quot;TRUE&quot;, start))
+ 98              elif &quot;$&quot; in word:
+ 99                  raise LexError(f&quot;malformed cell reference &#x27;{word}&#x27;&quot;, start)
+100              else:
+101                  toks.append(Token(TokType.IDENT, word, upper, start))
+102              continue
+103          # -- two-char operators before one-char (maximal munch)
+104          two = text[i:i + 2]
+105          if two == &quot;&lt;&gt;&quot;:
+106              toks.append(Token(TokType.NE, two, None, i)); i += 2; continue
+107          if two == &quot;&lt;=&quot;:
+108              toks.append(Token(TokType.LE, two, None, i)); i += 2; continue
+109          if two == &quot;&gt;=&quot;:
+110              toks.append(Token(TokType.GE, two, None, i)); i += 2; continue
+111          if ch == &quot;&lt;&quot;:
+112              toks.append(Token(TokType.LT, ch, None, i)); i += 1; continue
+113          if ch == &quot;&gt;&quot;:
+114              toks.append(Token(TokType.GT, ch, None, i)); i += 1; continue
+115          if ch in _SINGLE:
+116              toks.append(Token(_SINGLE[ch], ch, None, i)); i += 1; continue
+117          raise LexError(f&quot;illegal character {ch!r}&quot;, i)
+118      toks.append(Token(TokType.EOF, &quot;&quot;, None, n))
+119      return toks</pre>
+<h3 class="src-h">A.4 &nbsp;<code>tabula/parser.py</code> <span class="src-desc">— Pratt parser, AST definitions, AST printer (197 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Recursive-descent parser with Pratt precedence climbing for expressions.
+  2  
+  3  Grammar (design.md section 4): seven precedence tiers, comparison lowest,
+  4  &#x27;^&#x27; right-associative, unary minus binding tighter than &#x27;^&#x27; operand position.
+  5  &quot;&quot;&quot;
+  6  from __future__ import annotations
+  7  
+  8  from dataclasses import dataclass, field
+  9  
+ 10  from .lexer import Token, TokType, tokenize, LexError
+ 11  from .refs import CellRef, RangeRef
+ 12  
+ 13  
+ 14  # ---------- AST ----------
+ 15  @dataclass
+ 16  class Number:
+ 17      value: float
+ 18  
+ 19  
+ 20  @dataclass
+ 21  class Text:
+ 22      value: str
+ 23  
+ 24  
+ 25  @dataclass
+ 26  class Bool:
+ 27      value: bool
+ 28  
+ 29  
+ 30  @dataclass
+ 31  class Ref:
+ 32      ref: CellRef
+ 33  
+ 34  
+ 35  @dataclass
+ 36  class RangeNode:
+ 37      rng: RangeRef
+ 38  
+ 39  
+ 40  @dataclass
+ 41  class Name:
+ 42      ident: str
+ 43  
+ 44  
+ 45  @dataclass
+ 46  class Unary:
+ 47      op: str
+ 48      operand: object
+ 49  
+ 50  
+ 51  @dataclass
+ 52  class Binary:
+ 53      op: str
+ 54      left: object
+ 55      right: object
+ 56  
+ 57  
+ 58  @dataclass
+ 59  class Call:
+ 60      fname: str
+ 61      args: list = field(default_factory=list)
+ 62  
+ 63  
+ 64  class ParseError(Exception):
+ 65      def __init__(self, message: str, pos: int):
+ 66          super().__init__(message)
+ 67          self.message, self.pos = message, pos
+ 68  
+ 69  
+ 70  # binding powers: (left_bp, right_associative)
+ 71  _BINARY_BP = {
+ 72      TokType.EQ: (10, False), TokType.NE: (10, False),
+ 73      TokType.LT: (10, False), TokType.LE: (10, False),
+ 74      TokType.GT: (10, False), TokType.GE: (10, False),
+ 75      TokType.AMP: (20, False),
+ 76      TokType.PLUS: (30, False), TokType.MINUS: (30, False),
+ 77      TokType.STAR: (40, False), TokType.SLASH: (40, False),
+ 78      TokType.PERCENT: (40, False),
+ 79      TokType.CARET: (50, True),
+ 80  }
+ 81  
+ 82  
+ 83  class Parser:
+ 84      def __init__(self, tokens: list[Token]):
+ 85          self.toks = tokens
+ 86          self.i = 0
+ 87  
+ 88      def peek(self) -&gt; Token:
+ 89          return self.toks[self.i]
+ 90  
+ 91      def advance(self) -&gt; Token:
+ 92          tok = self.toks[self.i]
+ 93          self.i += 1
+ 94          return tok
+ 95  
+ 96      def expect(self, ttype: TokType, what: str) -&gt; Token:
+ 97          if self.peek().type is ttype:
+ 98              return self.advance()
+ 99          raise ParseError(f&quot;expected {what}&quot;, self.peek().pos)
+100  
+101      # -- Pratt loop -----------------------------------------------------
+102      def parse_expression(self, min_bp: int = 0):
+103          left = self.parse_unary()
+104          while True:
+105              tok = self.peek()
+106              bp = _BINARY_BP.get(tok.type)
+107              if bp is None or bp[0] &lt; min_bp:
+108                  return left
+109              self.advance()
+110              lbp, right_assoc = bp
+111              next_min = lbp if right_assoc else lbp + 1
+112              right = self.parse_expression(next_min)
+113              left = Binary(tok.lexeme, left, right)
+114  
+115      def parse_unary(self):
+116          if self.peek().type is TokType.MINUS:
+117              tok = self.advance()
+118              return Unary(&quot;-&quot;, self.parse_unary())
+119          return self.parse_primary()
+120  
+121      def parse_primary(self):
+122          tok = self.advance()
+123          if tok.type is TokType.NUMBER:
+124              return Number(tok.value)
+125          if tok.type is TokType.STRING:
+126              return Text(tok.value)
+127          if tok.type is TokType.BOOL:
+128              return Bool(tok.value)
+129          if tok.type is TokType.CELLREF:
+130              if self.peek().type is TokType.COLON:  # range A1:B4
+131                  self.advance()
+132                  end = self.expect(TokType.CELLREF, &quot;cell reference after &#x27;:&#x27;&quot;)
+133                  return RangeNode(RangeRef(tok.value, end.value))
+134              return Ref(tok.value)
+135          if tok.type is TokType.IDENT:
+136              if self.peek().type is TokType.LPAREN:  # function call
+137                  self.advance()
+138                  args = []
+139                  if self.peek().type is not TokType.RPAREN:
+140                      args.append(self.parse_expression())
+141                      while self.peek().type is TokType.COMMA:
+142                          self.advance()
+143                          args.append(self.parse_expression())
+144                  self.expect(TokType.RPAREN, &quot;&#x27;)&#x27; after argument list&quot;)
+145                  return Call(tok.value, args)
+146              return Name(tok.value)
+147          if tok.type is TokType.LPAREN:
+148              inner = self.parse_expression()
+149              self.expect(TokType.RPAREN, &quot;&#x27;)&#x27;&quot;)
+150              return inner
+151          what = f&quot;unexpected {tok.lexeme!r}&quot; if tok.lexeme else &quot;unexpected end of formula&quot;
+152          raise ParseError(what, tok.pos)
+153  
+154  
+155  def parse_formula(text: str):
+156      &quot;&quot;&quot;Parse formula body (text after &#x27;=&#x27;). Raises LexError/ParseError.&quot;&quot;&quot;
+157      tokens = tokenize(text)
+158      parser = Parser(tokens)
+159      ast = parser.parse_expression()
+160      trailing = parser.peek()
+161      if trailing.type is not TokType.EOF:
+162          raise ParseError(f&quot;unexpected {trailing.lexeme!r} after expression&quot;, trailing.pos)
+163      return ast
+164  
+165  
+166  # ---------- AST pretty-printer (explain v0) ----------
+167  def dump_ast(node, prefix: str = &quot;&quot;, is_last: bool = True,
+168               is_root: bool = True) -&gt; list[str]:
+169      label = {
+170          Number: lambda n: f&quot;Number({values_fmt(n.value)})&quot;,
+171          Text: lambda n: f&#x27;Text(&quot;{n.value}&quot;)&#x27;,
+172          Bool: lambda n: f&quot;Bool({n.value})&quot;,
+173          Ref: lambda n: f&quot;Ref({n.ref})&quot;,
+174          RangeNode: lambda n: f&quot;Range({n.rng})&quot;,
+175          Name: lambda n: f&quot;Name({n.ident})&quot;,
+176          Unary: lambda n: f&quot;Unary({n.op})&quot;,
+177          Binary: lambda n: f&quot;Binary({n.op})&quot;,
+178          Call: lambda n: f&quot;Call({n.fname})&quot;,
+179      }[type(node)](node)
+180      connector = &quot;&quot; if is_root else (&quot;└── &quot; if is_last else &quot;├── &quot;)
+181      lines = [prefix + connector + label]
+182      children = []
+183      if isinstance(node, Unary):
+184          children = [node.operand]
+185      elif isinstance(node, Binary):
+186          children = [node.left, node.right]
+187      elif isinstance(node, Call):
+188          children = node.args
+189      child_prefix = prefix + (&quot;&quot; if is_root else (&quot;    &quot; if is_last else &quot;│   &quot;))
+190      for k, child in enumerate(children):
+191          last = k == len(children) - 1
+192          lines.extend(dump_ast(child, child_prefix, last, is_root=False))
+193      return lines
+194  
+195  
+196  def values_fmt(v: float) -&gt; str:
+197      return str(int(v)) if v == int(v) else str(v)</pre>
+<h3 class="src-h">A.5 &nbsp;<code>tabula/evaluator.py</code> <span class="src-desc">— Direct AST evaluation (interim — replaced by the VM in Phase 3) (157 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Phase 1 prototype: direct AST evaluation over the grid.
+  2  
+  3  Interim component — replaced by the bytecode VM in Phase 3. On-demand
+  4  recursive evaluation with an active-cell set for dynamic cycle detection
+  5  (Phase 2 replaces this with the dependency graph + topological order).
+  6  &quot;&quot;&quot;
+  7  from __future__ import annotations
+  8  
+  9  from . import parser as P
+ 10  from .refs import CellRef
+ 11  from .values import (BLANK, CYCLE_ERR, DIV0, NAME_ERR, VALUE_ERR,
+ 12                       ErrorValue, is_error, to_number, to_text)
+ 13  
+ 14  
+ 15  def _num_args(values):
+ 16      &quot;&quot;&quot;Coerce operands for arithmetic; first error wins.&quot;&quot;&quot;
+ 17      out = []
+ 18      for v in values:
+ 19          n = to_number(v)
+ 20          if is_error(n):
+ 21              return n
+ 22          out.append(n)
+ 23      return out
+ 24  
+ 25  
+ 26  class Evaluator:
+ 27      def __init__(self, grid):
+ 28          self.grid = grid            # provides raw_cell(ref) -&gt; (kind, ast_or_value)
+ 29          self.active: set = set()    # cells currently being evaluated (cycle check)
+ 30  
+ 31      # -- cell protocol ---------------------------------------------------
+ 32      def value_of(self, ref: CellRef):
+ 33          key = ref.key()
+ 34          if key in self.active:
+ 35              return CYCLE_ERR
+ 36          cell = self.grid.cells.get(key)
+ 37          if cell is None:
+ 38              return BLANK
+ 39          if cell.kind == &quot;literal&quot;:
+ 40              return cell.payload
+ 41          if cell.kind == &quot;broken&quot;:       # formula that failed to compile
+ 42              return VALUE_ERR
+ 43          self.active.add(key)
+ 44          try:
+ 45              return self.eval(cell.payload)
+ 46          finally:
+ 47              self.active.discard(key)
+ 48  
+ 49      # -- expression evaluation --------------------------------------------
+ 50      def eval(self, node):
+ 51          method = getattr(self, f&quot;_eval_{type(node).__name__.lower()}&quot;)
+ 52          return method(node)
+ 53  
+ 54      def _eval_number(self, n): return n.value
+ 55      def _eval_text(self, n): return n.value
+ 56      def _eval_bool(self, n): return n.value
+ 57      def _eval_ref(self, n): return self.value_of(n.ref)
+ 58  
+ 59      def _eval_rangenode(self, n):
+ 60          # A bare range outside a function argument is a semantic error.
+ 61          return VALUE_ERR
+ 62  
+ 63      def _eval_name(self, n):
+ 64          return NAME_ERR  # named ranges arrive in Phase 2
+ 65  
+ 66      def _eval_unary(self, n):
+ 67          v = to_number(self.eval(n.operand))
+ 68          return v if is_error(v) else -v
+ 69  
+ 70      def _eval_binary(self, n):
+ 71          left = self.eval(n.left)
+ 72          if is_error(left):
+ 73              return left
+ 74          right = self.eval(n.right)
+ 75          if is_error(right):
+ 76              return right
+ 77          op = n.op
+ 78          if op == &quot;&amp;&quot;:
+ 79              lt, rt = to_text(left), to_text(right)
+ 80              return lt if is_error(lt) else rt if is_error(rt) else lt + rt
+ 81          if op in (&quot;=&quot;, &quot;&lt;&gt;&quot;):
+ 82              eq = left == right
+ 83              return eq if op == &quot;=&quot; else not eq
+ 84          if op in (&quot;&lt;&quot;, &quot;&lt;=&quot;, &quot;&gt;&quot;, &quot;&gt;=&quot;):
+ 85              if isinstance(left, str) and isinstance(right, str):
+ 86                  a, b = left, right
+ 87              else:
+ 88                  nums = _num_args([left, right])
+ 89                  if is_error(nums):
+ 90                      return nums
+ 91                  a, b = nums
+ 92              return {&quot;&lt;&quot;: a &lt; b, &quot;&lt;=&quot;: a &lt;= b, &quot;&gt;&quot;: a &gt; b, &quot;&gt;=&quot;: a &gt;= b}[op]
+ 93          nums = _num_args([left, right])
+ 94          if is_error(nums):
+ 95              return nums
+ 96          a, b = nums
+ 97          if op == &quot;+&quot;: return a + b
+ 98          if op == &quot;-&quot;: return a - b
+ 99          if op == &quot;*&quot;: return a * b
+100          if op == &quot;/&quot;: return DIV0 if b == 0 else a / b
+101          if op == &quot;%&quot;: return DIV0 if b == 0 else a % b
+102          if op == &quot;^&quot;: return a ** b
+103          return VALUE_ERR
+104  
+105      # -- functions ---------------------------------------------------------
+106      def _flatten(self, arg_nodes):
+107          &quot;&quot;&quot;Evaluate args, expanding ranges to their non-blank cell values.&quot;&quot;&quot;
+108          vals = []
+109          for node in arg_nodes:
+110              if isinstance(node, P.RangeNode):
+111                  for ref in node.rng.cells():
+112                      v = self.value_of(ref)
+113                      if v is not BLANK:
+114                          vals.append(v)
+115              else:
+116                  vals.append(self.eval(node))
+117          return vals
+118  
+119      def _eval_call(self, n):
+120          fname = n.fname
+121          if fname == &quot;IF&quot;:
+122              if len(n.args) != 3:
+123                  return VALUE_ERR
+124              cond = self.eval(n.args[0])
+125              if is_error(cond):
+126                  return cond
+127              return self.eval(n.args[1] if cond else n.args[2])  # lazy branch
+128          if fname in (&quot;SUM&quot;, &quot;AVG&quot;, &quot;MIN&quot;, &quot;MAX&quot;, &quot;COUNT&quot;):
+129              vals = self._flatten(n.args)
+130              if fname == &quot;COUNT&quot;:  # counts numeric entries only
+131                  numeric = [v for v in vals
+132                             if isinstance(v, (int, float)) and not isinstance(v, bool)]
+133                  return float(len(numeric))
+134              nums = _num_args(vals)
+135              if is_error(nums):
+136                  return nums
+137              if not nums:
+138                  return DIV0 if fname == &quot;AVG&quot; else 0.0
+139              if fname == &quot;SUM&quot;: return float(sum(nums))
+140              if fname == &quot;AVG&quot;: return sum(nums) / len(nums)
+141              if fname == &quot;MIN&quot;: return float(min(nums))
+142              if fname == &quot;MAX&quot;: return float(max(nums))
+143          if fname == &quot;ABS&quot;:
+144              v = to_number(self.eval(n.args[0])) if len(n.args) == 1 else VALUE_ERR
+145              return v if is_error(v) else abs(v)
+146          if fname == &quot;ROUND&quot;:
+147              if len(n.args) not in (1, 2):
+148                  return VALUE_ERR
+149              v = to_number(self.eval(n.args[0]))
+150              d = to_number(self.eval(n.args[1])) if len(n.args) == 2 else 0
+151              if is_error(v): return v
+152              if is_error(d): return d
+153              return float(round(v, int(d)))
+154          if fname == &quot;LEN&quot;:
+155              t = to_text(self.eval(n.args[0])) if len(n.args) == 1 else VALUE_ERR
+156              return t if is_error(t) else float(len(t))
+157          return ErrorValue(&quot;#NAME?&quot;, f&quot;unknown function {fname}&quot;)</pre>
+<h3 class="src-h">A.6 &nbsp;<code>tabula/engine.py</code> <span class="src-desc">— Grid, edit controller, diagnostics, explain (108 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Phase 1 grid + edit controller: set/get/show with full recomputation.&quot;&quot;&quot;
+  2  from __future__ import annotations
+  3  
+  4  from dataclasses import dataclass
+  5  
+  6  from .evaluator import Evaluator
+  7  from .lexer import LexError, tokenize
+  8  from .parser import ParseError, dump_ast, parse_formula
+  9  from .refs import CellRef, index_to_col
+ 10  from .values import BLANK, display
+ 11  
+ 12  
+ 13  @dataclass
+ 14  class Cell:
+ 15      raw: str
+ 16      kind: str        # &#x27;literal&#x27; | &#x27;formula&#x27; | &#x27;broken&#x27;
+ 17      payload: object  # value for literal, AST for formula, None for broken
+ 18  
+ 19  
+ 20  def caret_diagnostic(cellname: str, category: str, message: str,
+ 21                       formula: str, pos: int) -&gt; str:
+ 22      # pos is within the formula body; +1 accounts for the leading &#x27;=&#x27;
+ 23      return (
+ 24          f&quot;error[{category}] in {cellname}: {message}\n&quot;
+ 25          f&quot;  ={formula}\n&quot;
+ 26          f&quot;  {&#x27; &#x27; * (pos + 1)}^&quot;
+ 27      )
+ 28  
+ 29  
+ 30  class Sheet:
+ 31      def __init__(self):
+ 32          self.cells: dict[tuple[int, int], Cell] = {}
+ 33          self.evaluator = Evaluator(self)
+ 34  
+ 35      # -- editing -----------------------------------------------------------
+ 36      def set(self, refname: str, raw: str) -&gt; str | None:
+ 37          &quot;&quot;&quot;Set a cell. Returns a diagnostic string on compile error, else None.&quot;&quot;&quot;
+ 38          ref = CellRef.parse(refname)
+ 39          if ref is None:
+ 40              return f&quot;error[RefError]: invalid cell reference &#x27;{refname}&#x27;&quot;
+ 41          raw = raw.strip()
+ 42          if raw.startswith(&quot;=&quot;):
+ 43              body = raw[1:]
+ 44              try:
+ 45                  ast = parse_formula(body)
+ 46                  self.cells[ref.key()] = Cell(raw, &quot;formula&quot;, ast)
+ 47                  return None
+ 48              except LexError as e:
+ 49                  self.cells[ref.key()] = Cell(raw, &quot;broken&quot;, None)
+ 50                  return caret_diagnostic(str(ref), &quot;LexicalError&quot;,
+ 51                                          e.message, body, e.pos)
+ 52              except ParseError as e:
+ 53                  self.cells[ref.key()] = Cell(raw, &quot;broken&quot;, None)
+ 54                  return caret_diagnostic(str(ref), &quot;SyntaxError&quot;, e.message, body, e.pos)
+ 55          self.cells[ref.key()] = Cell(raw, &quot;literal&quot;, _parse_literal(raw))
+ 56          return None
+ 57  
+ 58      def value(self, refname: str):
+ 59          ref = CellRef.parse(refname)
+ 60          return self.evaluator.value_of(ref) if ref else None
+ 61  
+ 62      # -- rendering -----------------------------------------------------------
+ 63      def show(self) -&gt; str:
+ 64          if not self.cells:
+ 65              return &quot;(empty sheet)&quot;
+ 66          cols = sorted({c for c, _ in self.cells})
+ 67          rows = sorted({r for _, r in self.cells})
+ 68          widths = {}
+ 69          table = {}
+ 70          for c in cols:
+ 71              col_cells = [display(self.evaluator.value_of(CellRef(c, r))) for r in rows]
+ 72              for r, text in zip(rows, col_cells):
+ 73                  table[(c, r)] = text
+ 74              widths[c] = max([len(index_to_col(c))] + [len(t) for t in col_cells]) + 2
+ 75          head = &quot;     &quot; + &quot;&quot;.join(index_to_col(c).ljust(widths[c]) for c in cols)
+ 76          lines = [head]
+ 77          for r in rows:
+ 78              row = f&quot;{r:&lt;5}&quot; + &quot;&quot;.join(table[(c, r)].ljust(widths[c]) for c in cols)
+ 79              lines.append(row.rstrip())
+ 80          return &quot;\n&quot;.join(lines)
+ 81  
+ 82      def explain(self, refname: str) -&gt; str:
+ 83          ref = CellRef.parse(refname)
+ 84          cell = self.cells.get(ref.key()) if ref else None
+ 85          if cell is None:
+ 86              return f&quot;{refname}: (blank)&quot;
+ 87          out = [f&quot;cell   : {ref}&quot;, f&quot;raw    : {cell.raw}&quot;, f&quot;kind   : {cell.kind}&quot;]
+ 88          if cell.kind == &quot;formula&quot;:
+ 89              toks = tokenize(cell.raw[1:])
+ 90              out.append(&quot;tokens : &quot; + &quot; &quot;.join(
+ 91                  f&quot;{t.lexeme}&quot; for t in toks if t.lexeme))
+ 92              out.append(&quot;types  : &quot; + &quot; &quot;.join(
+ 93                  t.type.name for t in toks if t.lexeme))
+ 94              out.append(&quot;ast    :&quot;)
+ 95              out.extend(&quot;  &quot; + line for line in dump_ast(cell.payload))
+ 96          out.append(f&quot;value  : {display(self.evaluator.value_of(ref))}&quot;)
+ 97          return &quot;\n&quot;.join(out)
+ 98  
+ 99  
+100  def _parse_literal(raw: str):
+101      if raw == &quot;&quot;:
+102          return BLANK
+103      if raw.upper() in (&quot;TRUE&quot;, &quot;FALSE&quot;):
+104          return raw.upper() == &quot;TRUE&quot;
+105      try:
+106          return float(raw)
+107      except ValueError:
+108          return raw  # text literal</pre>
+<h3 class="src-h">A.7 &nbsp;<code>tabula/cli.py</code> <span class="src-desc">— REPL: interactive and batch modes (77 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Tabula Phase 1 REPL.
+  2  
+  3  Usage:  python -m tabula.cli            interactive
+  4          python -m tabula.cli script.txt batch (echoes commands, for demos)
+  5  &quot;&quot;&quot;
+  6  from __future__ import annotations
+  7  
+  8  import sys
+  9  
+ 10  from .engine import Sheet
+ 11  
+ 12  HELP = &quot;&quot;&quot;commands:
+ 13    set &lt;cell&gt; &lt;literal | =formula&gt;   edit a cell
+ 14    get &lt;cell&gt;                        value + raw content
+ 15    show                              render the grid
+ 16    explain &lt;cell&gt;                    tokens, AST, value for a cell
+ 17    help | quit&quot;&quot;&quot;
+ 18  
+ 19  
+ 20  def run_command(sheet: Sheet, line: str) -&gt; str | None:
+ 21      parts = line.strip().split(None, 2)
+ 22      if not parts:
+ 23          return None
+ 24      cmd = parts[0].lower()
+ 25      if cmd == &quot;quit&quot;:
+ 26          return &quot;QUIT&quot;
+ 27      if cmd == &quot;help&quot;:
+ 28          return HELP
+ 29      if cmd == &quot;set&quot; and len(parts) == 3:
+ 30          return sheet.set(parts[1], parts[2])
+ 31      if cmd == &quot;get&quot; and len(parts) &gt;= 2:
+ 32          ref = parts[1]
+ 33          cell = None
+ 34          from .refs import CellRef
+ 35          r = CellRef.parse(ref)
+ 36          if r:
+ 37              cell = sheet.cells.get(r.key())
+ 38          from .values import display
+ 39          raw = f&quot;   ({cell.raw})&quot; if cell and cell.kind != &quot;literal&quot; else &quot;&quot;
+ 40          return f&quot;{ref.upper()} = {display(sheet.value(ref))}{raw}&quot;
+ 41      if cmd == &quot;show&quot;:
+ 42          return sheet.show()
+ 43      if cmd == &quot;explain&quot; and len(parts) &gt;= 2:
+ 44          return sheet.explain(parts[1])
+ 45      return f&quot;unrecognized command: {line.strip()!r} (try &#x27;help&#x27;)&quot;
+ 46  
+ 47  
+ 48  def main() -&gt; None:
+ 49      sheet = Sheet()
+ 50      if len(sys.argv) &gt; 1:  # batch mode: echo each command, then its output
+ 51          with open(sys.argv[1]) as f:
+ 52              for line in f:
+ 53                  line = line.rstrip(&quot;\n&quot;)
+ 54                  if not line.strip() or line.lstrip().startswith(&quot;#&quot;):
+ 55                      continue
+ 56                  print(f&quot;tabula&gt; {line}&quot;)
+ 57                  out = run_command(sheet, line)
+ 58                  if out == &quot;QUIT&quot;:
+ 59                      break
+ 60                  if out:
+ 61                      print(out)
+ 62          return
+ 63      print(&quot;Tabula prototype - type &#x27;help&#x27; for commands&quot;)
+ 64      while True:
+ 65          try:
+ 66              line = input(&quot;tabula&gt; &quot;)
+ 67          except EOFError:
+ 68              break
+ 69          out = run_command(sheet, line)
+ 70          if out == &quot;QUIT&quot;:
+ 71              break
+ 72          if out:
+ 73              print(out)
+ 74  
+ 75  
+ 76  if __name__ == &quot;__main__&quot;:
+ 77      main()</pre>
+<h3 class="src-h">A.8 &nbsp;<code>tests/test_lexer.py</code> <span class="src-desc">— Scanner tests (60 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Unit tests for the formula scanner (task T1.6).&quot;&quot;&quot;
+  2  import pytest
+  3  
+  4  from tabula.lexer import LexError, TokType, tokenize
+  5  
+  6  
+  7  def types(text):
+  8      return [t.type for t in tokenize(text) if t.type is not TokType.EOF]
+  9  
+ 10  
+ 11  def test_every_token_class():
+ 12      toks = tokenize(&#x27;SUM(A1:$B$2) + 3.5 &amp; &quot;hi&quot; &lt;&gt; TRUE&#x27;)
+ 13      assert [t.type for t in toks] == [
+ 14          TokType.IDENT, TokType.LPAREN, TokType.CELLREF, TokType.COLON,
+ 15          TokType.CELLREF, TokType.RPAREN, TokType.PLUS, TokType.NUMBER,
+ 16          TokType.AMP, TokType.STRING, TokType.NE, TokType.BOOL, TokType.EOF,
+ 17      ]
+ 18  
+ 19  
+ 20  @pytest.mark.parametrize(&quot;text,value&quot;, [(&quot;12&quot;, 12.0), (&quot;3.5&quot;, 3.5), (&quot;.5&quot;, 0.5)])
+ 21  def test_number_forms(text, value):
+ 22      assert tokenize(text)[0].value == value
+ 23  
+ 24  
+ 25  def test_string_escape_is_doubled_quote():
+ 26      assert tokenize(&#x27;&quot;say &quot;&quot;hi&quot;&quot;&quot;&#x27;)[0].value == &#x27;say &quot;hi&quot;&#x27;
+ 27  
+ 28  
+ 29  def test_absolute_reference_keeps_anchors():
+ 30      ref = tokenize(&quot;$B$2&quot;)[0].value
+ 31      assert (ref.col, ref.row, ref.abs_col, ref.abs_row) == (2, 2, True, True)
+ 32  
+ 33  
+ 34  def test_two_char_operators_win_over_one_char():
+ 35      assert types(&quot;a&lt;=b&quot;) == [TokType.IDENT, TokType.LE, TokType.IDENT]
+ 36      assert types(&quot;a&lt;&gt;b&quot;) == [TokType.IDENT, TokType.NE, TokType.IDENT]
+ 37      assert types(&quot;a&lt;b&quot;) == [TokType.IDENT, TokType.LT, TokType.IDENT]
+ 38  
+ 39  
+ 40  def test_identifier_vs_reference_classification():
+ 41      assert types(&quot;A1&quot;) == [TokType.CELLREF]
+ 42      assert types(&quot;A1X&quot;) == [TokType.IDENT]     # not a reference shape
+ 43      assert types(&quot;ZZ10000&quot;) == [TokType.CELLREF]
+ 44      assert types(&quot;ZZ10001&quot;) == [TokType.IDENT]  # out of bounds -&gt; not a ref
+ 45  
+ 46  
+ 47  def test_positions_are_recorded():
+ 48      toks = tokenize(&quot;1 + 23&quot;)
+ 49      assert [t.pos for t in toks[:3]] == [0, 2, 4]
+ 50  
+ 51  
+ 52  @pytest.mark.parametrize(&quot;bad,message&quot;, [
+ 53      (&#x27;&quot;unterminated&#x27;, &quot;unterminated string literal&quot;),
+ 54      (&quot;1 # 2&quot;, &quot;illegal character&quot;),
+ 55      (&quot;$X&quot;, &quot;malformed cell reference&quot;),
+ 56  ])
+ 57  def test_lexical_errors(bad, message):
+ 58      with pytest.raises(LexError) as exc:
+ 59          tokenize(bad)
+ 60      assert message in exc.value.message</pre>
+<h3 class="src-h">A.9 &nbsp;<code>tests/test_parser.py</code> <span class="src-desc">— Parser tests: precedence, associativity, error positions (64 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Parser tests: AST shape, precedence, associativity (task T1.7).&quot;&quot;&quot;
+  2  import pytest
+  3  
+  4  from tabula.parser import (Binary, Bool, Call, Number, ParseError, RangeNode,
+  5                             Ref, Text, Unary, parse_formula)
+  6  
+  7  
+  8  def shape(node):
+  9      &quot;&quot;&quot;Fully parenthesized rendering, so precedence is directly assertable.&quot;&quot;&quot;
+ 10      if isinstance(node, Number):
+ 11          whole = node.value == int(node.value)
+ 12          return str(int(node.value)) if whole else str(node.value)
+ 13      if isinstance(node, Text):
+ 14          return f&#x27;&quot;{node.value}&quot;&#x27;
+ 15      if isinstance(node, Bool):
+ 16          return &quot;TRUE&quot; if node.value else &quot;FALSE&quot;
+ 17      if isinstance(node, Ref):
+ 18          return str(node.ref)
+ 19      if isinstance(node, RangeNode):
+ 20          return str(node.rng)
+ 21      if isinstance(node, Unary):
+ 22          return f&quot;(-{shape(node.operand)})&quot;
+ 23      if isinstance(node, Binary):
+ 24          return f&quot;({shape(node.left)} {node.op} {shape(node.right)})&quot;
+ 25      if isinstance(node, Call):
+ 26          return f&quot;{node.fname}({&#x27;, &#x27;.join(shape(a) for a in node.args)})&quot;
+ 27      return repr(node)
+ 28  
+ 29  
+ 30  @pytest.mark.parametrize(&quot;src,expected&quot;, [
+ 31      (&quot;2+3*4&quot;,        &quot;(2 + (3 * 4))&quot;),          # * binds tighter than +
+ 32      (&quot;2*3+4&quot;,        &quot;((2 * 3) + 4)&quot;),
+ 33      (&quot;1+2-3&quot;,        &quot;((1 + 2) - 3)&quot;),          # left-associative
+ 34      (&quot;2^3^2&quot;,        &quot;(2 ^ (3 ^ 2))&quot;),          # ^ is RIGHT-associative
+ 35      (&quot;-A1^2&quot;,        &quot;((-A1) ^ 2)&quot;),            # unary binds tighter than ^
+ 36      (&#x27;&quot;a&quot;&amp;1+2&#x27;,      &#x27;(&quot;a&quot; &amp; (1 + 2))&#x27;),        # &amp; is looser than +
+ 37      (&quot;1+2&lt;3*4&quot;,      &quot;((1 + 2) &lt; (3 * 4))&quot;),    # comparison is loosest
+ 38      (&quot;(2+3)*4&quot;,      &quot;((2 + 3) * 4)&quot;),
+ 39  ])
+ 40  def test_precedence_and_associativity(src, expected):
+ 41      assert shape(parse_formula(src)) == expected
+ 42  
+ 43  
+ 44  def test_range_and_call():
+ 45      assert shape(parse_formula(&quot;SUM(A1:B4)&quot;)) == &quot;SUM(A1:B4)&quot;
+ 46      assert shape(parse_formula(&quot;IF(A1&gt;0,1,2)&quot;)) == &quot;IF((A1 &gt; 0), 1, 2)&quot;
+ 47  
+ 48  
+ 49  def test_nested_calls():
+ 50      assert shape(parse_formula(&quot;MAX(SUM(A1:A3),AVG(B1:B3))&quot;)) == \
+ 51          &quot;MAX(SUM(A1:A3), AVG(B1:B3))&quot;
+ 52  
+ 53  
+ 54  @pytest.mark.parametrize(&quot;bad,message,pos&quot;, [
+ 55      (&quot;SUM(A1:A3&quot;,  &quot;expected &#x27;)&#x27; after argument list&quot;, 9),
+ 56      (&quot;2+&quot;,         &quot;unexpected end of formula&quot;,        2),
+ 57      (&quot;(1+2&quot;,       &quot;expected &#x27;)&#x27;&quot;,                     4),
+ 58      (&quot;1 2&quot;,        &quot;unexpected&quot;,                       2),
+ 59  ])
+ 60  def test_syntax_errors_report_message_and_position(bad, message, pos):
+ 61      with pytest.raises(ParseError) as exc:
+ 62          parse_formula(bad)
+ 63      assert message in exc.value.message
+ 64      assert exc.value.pos == pos</pre>
+<h3 class="src-h">A.10 &nbsp;<code>tests/test_evaluator.py</code> <span class="src-desc">— Evaluation, coercion, error-value and cycle tests (96 lines)</span></h3>
+<pre class="src">  1  &quot;&quot;&quot;Evaluation and error-value tests over the prototype grid (task T1.8).&quot;&quot;&quot;
+  2  import pytest
+  3  
+  4  from tabula.engine import Sheet
+  5  from tabula.values import display
+  6  
+  7  
+  8  def sheet_with(**cells) -&gt; Sheet:
+  9      s = Sheet()
+ 10      for name, raw in cells.items():
+ 11          s.set(name, raw)
+ 12      return s
+ 13  
+ 14  
+ 15  @pytest.mark.parametrize(&quot;formula,expected&quot;, [
+ 16      (&quot;=2+3*4&quot;,        &quot;14&quot;),
+ 17      (&quot;=2^3^2&quot;,        &quot;512&quot;),      # right-associative
+ 18      (&quot;=(2+3)*4&quot;,      &quot;20&quot;),
+ 19      (&quot;=-3^2&quot;,         &quot;9&quot;),        # (-3)^2 per unary-binds-tighter rule
+ 20      (&quot;=7/2&quot;,          &quot;3.5&quot;),
+ 21      (&quot;=7%3&quot;,          &quot;1&quot;),
+ 22      (&#x27;=&quot;a&quot;&amp;&quot;b&quot;&#x27;,      &quot;ab&quot;),
+ 23      (&#x27;=&quot;n=&quot;&amp;5&#x27;,       &quot;n=5&quot;),      # number coerced to text by &amp;
+ 24      (&quot;=2&lt;3&quot;,          &quot;TRUE&quot;),
+ 25      (&quot;=2=2&quot;,          &quot;TRUE&quot;),
+ 26      (&quot;=2&lt;&gt;2&quot;,         &quot;FALSE&quot;),
+ 27  ])
+ 28  def test_expression_semantics(formula, expected):
+ 29      s = sheet_with(A1=formula)
+ 30      assert display(s.value(&quot;A1&quot;)) == expected
+ 31  
+ 32  
+ 33  def test_references_and_aggregates():
+ 34      s = sheet_with(A1=&quot;10&quot;, A2=&quot;25&quot;, A3=&quot;40&quot;,
+ 35                     B1=&quot;=SUM(A1:A3)&quot;, B2=&quot;=AVG(A1:A3)&quot;,
+ 36                     B3=&quot;=MIN(A1:A3)&quot;, B4=&quot;=MAX(A1:A3)&quot;, B5=&quot;=COUNT(A1:A3)&quot;)
+ 37      assert display(s.value(&quot;B1&quot;)) == &quot;75&quot;
+ 38      assert display(s.value(&quot;B2&quot;)) == &quot;25&quot;
+ 39      assert display(s.value(&quot;B3&quot;)) == &quot;10&quot;
+ 40      assert display(s.value(&quot;B4&quot;)) == &quot;40&quot;
+ 41      assert display(s.value(&quot;B5&quot;)) == &quot;3&quot;
+ 42  
+ 43  
+ 44  def test_edit_propagates_to_dependents():
+ 45      s = sheet_with(A1=&quot;10&quot;, A2=&quot;25&quot;, B1=&quot;=SUM(A1:A2)*2&quot;)
+ 46      assert display(s.value(&quot;B1&quot;)) == &quot;70&quot;
+ 47      s.set(&quot;A2&quot;, &quot;35&quot;)
+ 48      assert display(s.value(&quot;B1&quot;)) == &quot;90&quot;
+ 49  
+ 50  
+ 51  def test_blank_cell_reads_as_zero_and_empty_text():
+ 52      s = sheet_with(A1=&quot;=B9+5&quot;, A2=&#x27;=B9&amp;&quot;x&quot;&#x27;)
+ 53      assert display(s.value(&quot;A1&quot;)) == &quot;5&quot;
+ 54      assert display(s.value(&quot;A2&quot;)) == &quot;x&quot;
+ 55  
+ 56  
+ 57  def test_if_evaluates_only_the_taken_branch():
+ 58      # If IF were eager, the untaken 1/0 branch would surface #DIV/0!.
+ 59      s = sheet_with(A1=&quot;=IF(TRUE, 42, 1/0)&quot;)
+ 60      assert display(s.value(&quot;A1&quot;)) == &quot;42&quot;
+ 61  
+ 62  
+ 63  @pytest.mark.parametrize(&quot;formula,code&quot;, [
+ 64      (&quot;=1/0&quot;,          &quot;#DIV/0!&quot;),
+ 65      (&quot;=5%0&quot;,          &quot;#DIV/0!&quot;),
+ 66      (&#x27;=&quot;abc&quot;*2&#x27;,      &quot;#VALUE!&quot;),   # text is never implicitly numeric
+ 67      (&quot;=NOSUCH(1)&quot;,    &quot;#NAME?&quot;),
+ 68  ])
+ 69  def test_error_values(formula, code):
+ 70      s = sheet_with(A1=formula)
+ 71      assert display(s.value(&quot;A1&quot;)) == code
+ 72  
+ 73  
+ 74  def test_errors_propagate_through_dependents():
+ 75      s = sheet_with(A1=&quot;=1/0&quot;, B1=&quot;=A1+1&quot;)
+ 76      assert display(s.value(&quot;B1&quot;)) == &quot;#DIV/0!&quot;
+ 77  
+ 78  
+ 79  def test_circular_reference_is_detected():
+ 80      s = sheet_with(A1=&quot;=B1&quot;, B1=&quot;=A1&quot;)
+ 81      assert display(s.value(&quot;A1&quot;)) == &quot;#CYCLE!&quot;
+ 82      assert display(s.value(&quot;B1&quot;)) == &quot;#CYCLE!&quot;
+ 83  
+ 84  
+ 85  def test_broken_formula_is_contained_to_its_cell():
+ 86      s = sheet_with(A1=&quot;10&quot;, B1=&quot;=SUM(A1&quot;, C1=&quot;=A1*2&quot;)
+ 87      assert display(s.value(&quot;B1&quot;)) == &quot;#VALUE!&quot;   # broken cell
+ 88      assert display(s.value(&quot;C1&quot;)) == &quot;20&quot;        # neighbours unaffected
+ 89  
+ 90  
+ 91  def test_compile_error_reports_caret_diagnostic():
+ 92      s = Sheet()
+ 93      diag = s.set(&quot;C1&quot;, &quot;=SUM(A1:A3&quot;)
+ 94      assert &quot;error[SyntaxError] in C1&quot; in diag
+ 95      assert &quot;expected &#x27;)&#x27; after argument list&quot; in diag
+ 96      assert diag.splitlines()[-1].strip() == &quot;^&quot;</pre>
+<h3 class="src-h">A.11 &nbsp;<code>examples/demo.txt</code> <span class="src-desc">— Review 1 demonstration script (27 lines)</span></h3>
+<pre class="src">  1  # Tabula Phase 1 demonstration script
+  2  # Run:  python3 -m tabula.cli examples/demo.txt
+  3  
+  4  # --- 1. literals and formulas over a range
+  5  set A1 10
+  6  set A2 25
+  7  set A3 40
+  8  set B1 =SUM(A1:A3)*2
+  9  set B2 =AVG(A1:A3)
+ 10  set B3 =IF(B2&gt;20, &quot;high&quot;, &quot;low&quot;)
+ 11  show
+ 12  
+ 13  # --- 2. editing an input updates dependent formulas
+ 14  set A2 35
+ 15  get B1
+ 16  
+ 17  # --- 3. compiler pipeline for one cell
+ 18  explain B1
+ 19  
+ 20  # --- 4. error handling: syntax error is reported and contained
+ 21  set C1 =SUM(A1:A3
+ 22  
+ 23  # --- 5. runtime error value and circular reference
+ 24  set C2 =10/0
+ 25  set A5 =B5
+ 26  set B5 =A5
+ 27  show</pre>
+<p class="footer-note">Total: 1041 lines across 11 files.</p>
+
+</body>
+</html>

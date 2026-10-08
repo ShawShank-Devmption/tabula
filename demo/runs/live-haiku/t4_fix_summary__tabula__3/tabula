@@ -1,0 +1,2 @@
+#!/bin/sh
+PYTHONPATH="/Users/shashankbhat/Projects/compiler_project" exec "/Users/shashankbhat/.pyenv/versions/3.11.14/bin/python3" -m tabula "$@"

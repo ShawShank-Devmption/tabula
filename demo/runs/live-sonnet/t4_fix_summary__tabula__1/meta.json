@@ -1,0 +1,18 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t4_fix_summary__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 11.5,
+  "tool_calls": 5,
+  "cost_usd": 0.03663620000000001,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. Both are still live formulas, and nothing on the other sheets changed. Tabula checked the edit and re-read the file after writing. I haven't opened it in Excel.\n\n- **Total commission (`B4`):** It was `=Sales!E22`, which is total revenue. It is now `=Sales!F22`, the commission total, and shows 4576.14 (was 76269).\n- **North revenue (`B6`):** The `SUMIF` was matching \"North\" against the Rep column (`Sales!B`), so it returned 0. It now matches against the Region column (`Sales!A2:A21`) and shows 21816.\n\nThe other Summary figures (total revenue, average sale and target met) were already correct. The edit script is saved as `edit.tel` in the folder.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

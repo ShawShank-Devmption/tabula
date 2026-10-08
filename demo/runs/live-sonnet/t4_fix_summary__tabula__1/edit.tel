@@ -1,0 +1,2 @@
+set Summary!B4 =Sales!F22
+set Summary!B6 =SUMIF(Sales!A2:A21,"North",Sales!E2:E21)

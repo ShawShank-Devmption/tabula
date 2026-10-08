@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "tabula",
+  "trial": 2,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__2",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 11.7,
+  "tool_calls": 5,
+  "cost_usd": 0.0358256,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I inserted the West / Dana Lee sale (40 units at 125) as row 11 on the Sales sheet and saved `book.xlsx` in place. The apply step re-read the file and verified it.\n\n- **New row:** Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300. These match the other rows.\n- **Totals:** Inserting inside the range made every total formula and named range cover the new row. The Sales totals row is now row 23, and its totals are Units 657, Revenue 81,269 and Commission 4,876.14.\n- **Summary:** All five figures now include the new sale.\n  - Total revenue (`B3`) is 81,269.\n  - Total commission (`B4`) is 4,876.14.\n  - Average revenue (`B5`) is about 3,869.95. Its `SalesRevenue` range now runs `E2:E22`.\n  - North revenue (`B6`) now reads `A2:A22` and `E2:E22`.\n  - The target check (`B7`) was not in the list of changed values.\n\nI also added a check that the Sales revenue total equals the sum of rows 2 to 22. It passed.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

@@ -1,0 +1,18 @@
+{
+  "task": "t3_delete_test_rows",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 12.1,
+  "tool_calls": 5,
+  "cost_usd": 0.0381754,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I deleted the two TEST rows from the Sales sheet (original rows 8 and 15) and saved `book.xlsx` in place. The rows below moved up, so the Sales data now ends at row 19 and the totals are in row 20.\n\n- **Formulas:** Tabula's check passed, and I added a check that the Sales revenue total equals the sum of the remaining rows, which also passed. The totals and Summary figures still use live formulas. They now read `SUM(C2:C19)`, `SUM(E2:E19)` and `SUM(F2:F19)`. The Summary formulas and the `SalesRevenue` named range were shifted to match.\n- **Value changes:** The test rows had small values, so the totals dropped slightly. Total revenue went from 76,269 to 76,267, and commission from 4,576.14 to 4,576.02. Average revenue went from 3,813.45 to 4,237.06, because it is now averaged over 18 rows instead of 20.\n\nI also left `edit.tel` in the folder.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

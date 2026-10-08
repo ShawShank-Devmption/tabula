@@ -1,0 +1,18 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "tabula",
+  "trial": 3,
+  "driver": "claude",
+  "model": "haiku",
+  "dir": "demo/runs/live-haiku/t4_fix_summary__tabula__3",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 30.0,
+  "tool_calls": 8,
+  "cost_usd": 0.0409767,
+  "num_turns": 9,
+  "is_error": false,
+  "final_message": "Done! I found and fixed the two incorrect figures on the Summary sheet:\n\n1. **B4 (Total commission)**: Fixed formula from `=Sales!E22` to `=Sales!F22`, now correctly shows **4576.14** instead of 76269\n2. **B6 (North revenue)**: Fixed formula from `=SUMIF(Sales!B2:B21,\"North\",Sales!E2:E21)` to `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`, now correctly shows **21816** instead of 0\n\nBoth are now live Excel formulas (not hardcoded values), and the changes have been saved to book.xlsx in place.",
+  "permission_denials": 0,
+  "model_id": "claude-haiku-4-5-20251001"
+}

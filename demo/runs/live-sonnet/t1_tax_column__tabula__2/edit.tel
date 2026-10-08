@@ -1,0 +1,7 @@
+in "Sales" {
+  set G1 "Tax"
+  set G2:G21 =E2*TaxRate
+  set G22 =SUM(G2:G21)
+}
+set Summary!A8 "Total tax"
+set Summary!B8 =Sales!G22

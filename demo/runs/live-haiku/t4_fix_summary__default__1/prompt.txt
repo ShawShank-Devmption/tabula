@@ -1,0 +1,7 @@
+You are working in a folder that contains an Excel workbook, book.xlsx.
+
+Task: Two of the figures on the Summary sheet are calculated wrongly. Find and fix them so that every Summary figure is correct. Do not change anything on the other sheets.
+
+Save your changes to book.xlsx in place (keep the file name). Keep calculated values as live Excel formulas rather than typing in computed numbers. Only a few shell commands are available here; if one is refused, do the step another way (for example, create files with the Write tool). When you are done, reply with a short summary of what you changed.
+
+Method: use Python 3 with the openpyxl library (already installed) to read and edit the workbook. Run your scripts with python3.

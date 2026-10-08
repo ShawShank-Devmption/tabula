@@ -1,0 +1,18 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "tabula",
+  "trial": 2,
+  "driver": "claude",
+  "model": "haiku",
+  "dir": "demo/runs/live-haiku/t4_fix_summary__tabula__2",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 29.0,
+  "tool_calls": 8,
+  "cost_usd": 0.03876689999999999,
+  "num_turns": 9,
+  "is_error": false,
+  "final_message": "Done! I've fixed the two incorrect figures on the Summary sheet:\n\n1. **B4 (Total commission)**: Changed from `=Sales!E22` to `=Sales!F22`, now correctly showing **4576.14** (the total of commissions in column F, not revenues)\n\n2. **B6 (North revenue)**: Changed the SUMIF criteria range from `Sales!B2:B21` to `Sales!A2:A21`, now correctly showing **21816** (summing revenues where the Region column contains \"North\", not the Rep names column)\n\nAll Summary figures are now correct and saved as live formulas in book.xlsx.",
+  "permission_denials": 0,
+  "model_id": "claude-haiku-4-5-20251001"
+}

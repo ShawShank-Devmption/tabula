@@ -1,0 +1,13 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "reference",
+  "model": null,
+  "dir": "demo/runs/reference/t4_fix_summary__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "is_error": false,
+  "duration_s": 0.11,
+  "final_message": "sha256: 67de1b00c761fa36d9a5b0faefe4f921c554a7dc2df8878547b4114bc25ba0ee"
+}

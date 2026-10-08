@@ -1,0 +1,18 @@
+{
+  "task": "t1_tax_column",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t1_tax_column__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 10.8,
+  "tool_calls": 4,
+  "cost_usd": 0.0328644,
+  "num_turns": 5,
+  "is_error": false,
+  "final_message": "I added the Tax column and the Summary line, and saved them to `book.xlsx`. Tabula's check passed with no errors, and the apply step re-read the file and verified it.\n\n- **Sales sheet:** G1 is \"Tax\". G2:G21 is `=E2*TaxRate`, filled down, where `TaxRate` is the named cell `Inputs!B2`. G22 is `=SUM(G2:G21)`.\n- **Summary sheet:** A8 is \"Total tax\" and B8 is `=Sales!G22`.\n\nAll the new cells are live formulas.\n\nG8 comes out at only 0.18, so that row's Revenue (E8) looks like about 1. The other rows are in the hundreds or thousands. I didn't change it, but you may want to check that row's source data.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

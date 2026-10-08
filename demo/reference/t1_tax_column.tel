@@ -1,0 +1,11 @@
+# T1: tax column with a total, plus a summary line
+in "Sales" {
+  set G1 "Tax"
+  set G2:G21 =E2*TaxRate
+  set G22 =SUM(G2:G21)
+}
+in "Summary" {
+  set A8 "Total tax"
+  set B8 =Sales!G22
+}
+expect Summary!B8 = Sales!E22*TaxRate

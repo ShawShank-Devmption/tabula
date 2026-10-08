@@ -1,0 +1,2 @@
+rename sheet "Sales" to "Q3 Sales"
+expect Summary!B3 = 'Q3 Sales'!E22

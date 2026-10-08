@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 13.7,
+  "tool_calls": 6,
+  "cost_usd": 0.040475,
+  "num_turns": 7,
+  "is_error": false,
+  "final_message": "I inserted the new sale as row 11 on the Sales sheet and saved `book.xlsx` in place. Tabula re-read the saved file and verified it. I didn't open it in Excel.\n\n- **New row:** West, Dana Lee, 40 units at 125. Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300.\n- **Totals:** The totals row moved to row 23. Its `SUM` ranges grew to cover the new row, so Units is 657, Revenue is 81,269 and Commission is 4,876.14.\n- **Summary sheet:**\n  - Total revenue (B3) is 81,269.\n  - Total commission (B4) is 4,876.14.\n  - Average revenue (B5) is about 3,869.95.\n  - The North-only `SUMIF` (B6) is unchanged, since the new sale is in the West region.\n  - The target check (B7) wasn't listed as changed.\n- **Named range:** `SalesRevenue` also expanded to include the new row.\n\nI also left an `edit.tel` script in the folder; it's the edit script I applied.",
+  "permission_denials": 1,
+  "model_id": "claude-sonnet-5-5"
+}

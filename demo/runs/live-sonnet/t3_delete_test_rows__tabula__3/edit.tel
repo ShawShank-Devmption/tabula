@@ -1,0 +1,5 @@
+in "Sales" {
+  delete rows 15
+  delete rows 8
+}
+expect Summary!B3 = SUM(Sales!E2:E19)

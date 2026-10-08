@@ -1,0 +1,8 @@
+in "Sales" {
+  insert rows 11
+  set A11:D11 ["West", "Dana Lee", 40, 125]
+  set E11 =C11*D11
+  set F11 =E11*CommissionRate
+}
+expect Sales!E23 = SUM(Sales!E2:E22)
+expect Summary!B3 = Sales!E23

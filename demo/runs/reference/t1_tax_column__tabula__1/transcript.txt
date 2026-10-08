@@ -1,0 +1,24 @@
+tabula: /Users/shashankbhat/Projects/compiler_project/demo/reference/t1_tax_column.tel on book.xlsx
+
+APPLIED: wrote book.xlsx (24 cells synced, re-read and verified).
+
+writes (24)
+  Sales!G1         Tax
+  Sales!G2         =E2*TaxRate  -> 907.2
+  Sales!G3         =E3*TaxRate  -> 810
+  Sales!G4         =E4*TaxRate  -> 567
+  Sales!G5         =E5*TaxRate  -> 874.8
+  Sales!G6         =E6*TaxRate  -> 675
+  Sales!G7         =E7*TaxRate  -> 648
+  Sales!G8         =E8*TaxRate  -> 0.18
+  Sales!G9         =E9*TaxRate  -> 633.6
+  Sales!G10        =E10*TaxRate  -> 831.6
+  Sales!G11        =E11*TaxRate  -> 781.2
+  Sales!G12        =E12*TaxRate  -> 769.5
+  ... 12 more
+
+expects
+  line 11   Summary!B8 = Sales!E22*TaxRate           PASS
+
+stats: 8 statements -> 25 ops (0 dead writes removed); 22 of 70 formulas recomputed in 0.12 ms
+sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353

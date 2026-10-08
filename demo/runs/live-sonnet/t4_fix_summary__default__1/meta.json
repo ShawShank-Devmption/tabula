@@ -1,0 +1,18 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "default",
+  "trial": 1,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t4_fix_summary__default__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 10.4,
+  "tool_calls": 3,
+  "cost_usd": 0.028334799999999997,
+  "num_turns": 4,
+  "is_error": false,
+  "final_message": "I fixed the two wrong figures on the Summary sheet and saved `book.xlsx` in place. I haven't recalculated or opened the file, so the new values are unchecked. Both are still live formulas, and no other sheet was changed.\n\n- **Total commission (B4):** it pointed at total revenue (`=Sales!E22`). It now reads `=Sales!F22`, the commission total.\n- **North revenue (B6):** the `SUMIF` was matching \"North\" against the Rep column (B), so it would have returned 0. It now matches against the Region column: `=SUMIF(Sales!A2:A21,\"North\",Sales!E2:E21)`.\n\nSales rows 8 and 15 are \"Test\" rows with 1 unit at $1. They are included in Total revenue and in Average sale. I left them alone because you said not to change the other sheets, and they may be meant to count.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

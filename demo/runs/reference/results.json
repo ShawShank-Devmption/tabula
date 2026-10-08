@@ -1,0 +1,662 @@
+[
+  {
+    "task": "t1_tax_column",
+    "arm": "default",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t1_tax_column__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.09,
+    "final_message": "added Tax column G and Summary!B8",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t1_tax_column",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t1_tax_column__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.11,
+    "final_message": "sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353",
+    "checks": [
+      {
+        "check": "G1 header is 'Tax'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax per row = revenue x tax rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax cells are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax total in row 22",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary A8 label mentions tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 = total tax",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary B8 is a formula",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "existing Summary figures unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "tax follows the tax rate (live, not hard-coded)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "default",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t2_insert_row__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.09,
+    "final_message": "inserted row 11",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": false,
+        "detail": "Sales!E12=5000 (expected 4340); Sales!E13=4340 (expected 4275); Sales!E14=4275 (expected 4940); Sales!E15=4940 (expected 4370) (+7 more)"
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": false,
+        "detail": "Sales!C23=610 (expected 657); Sales!E23=77653 (expected 81269); Sales!F23=4,708 (expected 4,876)"
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3=4480 (expected 81269); Summary!B4=250.9 (expected 4,876); Summary!B5=3,883 (expected 3,870); Summary!B6=13791 (expected 21816) (+1 more)"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "the result no longer depends on Sales!C2 (the link is broken)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 11,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t2_insert_row",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t2_insert_row__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.12,
+    "final_message": "sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353",
+    "checks": [
+      {
+        "check": "new sale in row 11",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 revenue and commission",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "row 11 calculations are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 23",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 11,
+    "total": 11,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "default",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t3_delete_test_rows__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.09,
+    "final_message": "deleted TEST rows",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": false,
+        "detail": "Sales!E8=4620 (expected 3520); Sales!E9=4340 (expected 4620); Sales!E10=4275 (expected 4340); Sales!E11=4940 (expected 4275) (+8 more)"
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": false,
+        "detail": "Sales!C20='circular reference' (expected 615); Sales!E20='circular reference' (expected 76267); Sales!F20='circular reference' (expected 4,576)"
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3='circular reference' (expected 76267); Summary!B4='circular reference' (expected 4,576); Summary!B5='circular reference' (expected 4,237); Summary!B6='circular reference' (expected 21816) (+1 more)"
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": false,
+        "detail": "the result no longer depends on Sales!C2 (the link is broken)"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": false,
+        "detail": "Sales!F16: circular reference; Sales!E18: circular reference; Sales!F18: circular reference; Sales!C20: circular reference"
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 4,
+    "total": 9,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t3_delete_test_rows",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t3_delete_test_rows__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.12,
+    "final_message": "sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353",
+    "checks": [
+      {
+        "check": "no TEST rows remain",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "revenue/commission per row",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Total row is row 20",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Sales totals include exactly the data rows",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows a change to the first sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "default",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t4_fix_summary__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.09,
+    "final_message": "fixed Summary!B4 and B6",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t4_fix_summary",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t4_fix_summary__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.11,
+    "final_message": "sha256: 67de1b00c761fa36d9a5b0faefe4f921c554a7dc2df8878547b4114bc25ba0ee",
+    "checks": [
+      {
+        "check": "total commission fixed (B4)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "North revenue fixed (B6)",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "fixes are formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Sales unchanged",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B4 follows the commission rate",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "B6 follows a North sale",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 9,
+    "total": 9,
+    "success": true,
+    "silent_failure": false
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "default",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t5_rename_sheet__default__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.09,
+    "final_message": "renamed Sales to Q3 Sales",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": false,
+        "detail": "Summary!B3='refers to a sheet that does not exist' (expected 76269); Summary!B4='refers to a sheet that does not exist' (expected 4,576); Summary!B5='#NAME?' (expected 3,813); Summary!B6='refers to a sheet that does not exist' (expected 21816) (+1 more)"
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": false,
+        "detail": "SalesRevenue -> 'Sales!$E$2:$E$21'"
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": false,
+        "detail": "refers to a sheet that does not exist"
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": false,
+        "detail": "Summary!B3: refers to a sheet that does not exist; Summary!B4: refers to a sheet that does not exist; Summary!B5: #NAME?; Summary!B6: refers to a sheet that does not exist"
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 3,
+    "total": 7,
+    "success": false,
+    "silent_failure": true
+  },
+  {
+    "task": "t5_rename_sheet",
+    "arm": "tabula",
+    "trial": 1,
+    "driver": "reference",
+    "model": null,
+    "dir": "demo/runs/reference/t5_rename_sheet__tabula__1",
+    "returncode": 0,
+    "timed_out": false,
+    "is_error": false,
+    "duration_s": 0.11,
+    "final_message": "sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353",
+    "checks": [
+      {
+        "check": "sheet renamed to 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "every Summary figure correct",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "named range SalesRevenue points at 'Q3 Sales'",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "data rows intact and in order",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "Summary follows the renamed sheet",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "no error values or broken/circular formulas",
+        "ok": true,
+        "detail": ""
+      },
+      {
+        "check": "sheet Inputs unchanged",
+        "ok": true,
+        "detail": ""
+      }
+    ],
+    "passed": 7,
+    "total": 7,
+    "success": true,
+    "silent_failure": false
+  }
+]

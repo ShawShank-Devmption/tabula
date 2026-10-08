@@ -1,0 +1,27 @@
+# Tabula REPL demonstration script (single in-memory sheet)
+# Run:  python3 -m tabula repl examples/demo.txt
+
+# --- 1. literals and formulas over a range
+set A1 10
+set A2 25
+set A3 40
+set B1 =SUM(A1:A3)*2
+set B2 =AVERAGE(A1:A3)
+set B3 =IF(B2>20, "high", "low")
+show
+
+# --- 2. editing an input updates dependent formulas
+set A2 35
+get B1
+
+# --- 3. compiler pipeline for one cell
+explain B1
+
+# --- 4. error handling: syntax error is reported and contained
+set C1 =SUM(A1:A3
+
+# --- 5. runtime error value and circular reference
+set C2 =10/0
+set A5 =B5
+set B5 =A5
+show

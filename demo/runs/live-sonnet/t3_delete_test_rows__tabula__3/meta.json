@@ -1,0 +1,18 @@
+{
+  "task": "t3_delete_test_rows",
+  "arm": "tabula",
+  "trial": 3,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t3_delete_test_rows__tabula__3",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 12.4,
+  "tool_calls": 5,
+  "cost_usd": 0.03925100000000001,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I deleted the two TEST rows (rows 8 and 15) from the Sales sheet and saved the result to `book.xlsx`. The rows below moved up, and the Sales data now runs from row 2 to row 19.\n\n- **Formulas:** Tabula rewrote all 30 affected formulas to follow the moved rows, and they are all still live formulas. The Sales totals are now in row 20 (`=SUM(C2:C19)`, `=SUM(E2:E19)`, `=SUM(F2:F19)`).\n- **Summary sheet:** `B3` and `B4` now point at `Sales!E20` and `Sales!F20`. The `B6` `SUMIF` ranges and the `SalesRevenue` named range both shrank to rows 2\u201319.\n- **Figures:** Revenue went from 76,269 to 76,267 and commission from 4,576.14 to 4,576.02, so the test rows had small values. The average revenue in `B5` went from 3,813.45 to about 4,237.06, because it now averages 18 rows instead of 20. These values are Tabula's own calculation, since the file has never been opened in Excel.\n- **Check:** I added a check that `Summary!B3` equals `SUM(Sales!E2:E19)`, and it passed.\n\nI left the edit script in the folder as `edit.tel`.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

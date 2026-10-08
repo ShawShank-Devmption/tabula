@@ -1,0 +1,28 @@
+tabula: /Users/shashankbhat/Projects/compiler_project/demo/reference/t2_insert_row.tel on book.xlsx
+
+APPLIED: wrote book.xlsx (34 cells synced, re-read and verified).
+
+writes (6)
+  Sales!A11        West
+  Sales!B11        Dana Lee
+  Sales!C11        40
+  Sales!D11        125
+  Sales!E11        =C11*D11  -> 5000
+  Sales!F11        =E11*CommissionRate  -> 300
+
+affected formulas (value changes) (6)
+  Sales!C23        617 -> 657
+  Sales!E23        76269 -> 81269
+  Sales!F23        4576.14 -> 4876.14
+  Summary!B3       76269 -> 81269
+  Summary!B4       4576.14 -> 4876.14
+  Summary!B5       3813.45 -> 3869.95238095238
+
+relocated: 28 formula(s) rewritten to follow moved/renamed cells
+
+expects
+  line 8    Sales!E23 = SUM(Sales!E2:E22)            PASS
+  line 9    Summary!B3 = Sales!E23                   PASS
+
+stats: 7 statements -> 9 ops (0 dead writes removed); 50 of 50 formulas recomputed in 0.317 ms
+sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353

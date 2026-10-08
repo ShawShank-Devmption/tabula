@@ -1,0 +1,13 @@
+{
+  "task": "t2_insert_row",
+  "arm": "default",
+  "trial": 1,
+  "driver": "reference",
+  "model": null,
+  "dir": "demo/runs/reference/t2_insert_row__default__1",
+  "returncode": 0,
+  "timed_out": false,
+  "is_error": false,
+  "duration_s": 0.09,
+  "final_message": "inserted row 11"
+}

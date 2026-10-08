@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "default",
+  "trial": 1,
+  "driver": "claude",
+  "model": "haiku",
+  "dir": "demo/runs/live-haiku/t2_insert_row__default__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 141.6,
+  "tool_calls": 30,
+  "cost_usd": 0.2437611,
+  "num_turns": 31,
+  "is_error": false,
+  "final_message": "Excellent! The workbook has been successfully updated. Here's what changed:\n\n**Summary of changes:**\n\n1. **Inserted new sale at row 11:** West region, Dana Lee rep, 40 units, $125 unit price\n2. **Added formulas for new row:**\n   - Revenue: `=C11*D11` (40 \u00d7 125 = 5,000)\n   - Commission: `=E11*CommissionRate` (5,000 \u00d7 0.06 = 300)\n3. **Shifted existing data:** Original rows 11-21 moved to rows 12-22\n4. **Updated totals row:** Now at row 23 with formulas `=SUM(C2:C22)`, `=SUM(E2:E22)`, `=SUM(F2:F22)`\n5. **Updated Summary sheet formulas:**\n   - Total revenue: `=Sales!E23`\n   - Total commission: `=Sales!F23`\n   - North revenue SUMIF: `=SUMIF(Sales!A2:A22,\"North\",Sales!E2:E22)`\n6. **Updated SalesRevenue named range:** Now `Sales!$E$2:$E$22` (includes the new row)\n\nAll calculations use live Excel formulas (not hardcoded values), so totals and summary figures automatically include the new sale.",
+  "permission_denials": 0,
+  "model_id": "claude-haiku-4-5-20251001"
+}

@@ -1,0 +1,9 @@
+in "Sales" {
+  insert rows 11
+  set A11 "West"
+  set B11 "Dana Lee"
+  set C11 40
+  set D11 125
+  set E11 =C11*D11
+  set F11 =E11*CommissionRate
+}

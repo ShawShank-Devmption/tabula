@@ -1,0 +1,62 @@
+30 run(s) -> /Users/shashankbhat/Projects/compiler_project/demo/runs/live-sonnet
+  done t1_tax_column          tabula   trial 2  8.8s  cost=0.0353156
+  done t1_tax_column          default  trial 2  9.3s  cost=0.030569600000000002
+  done t1_tax_column          default  trial 1  9.1s  cost=0.0257632
+  done t1_tax_column          tabula   trial 1  9.9s  cost=0.0371972
+  done t1_tax_column          default  trial 3  10.3s  cost=0.030950400000000003
+  done t2_insert_row          default  trial 1  10.2s  cost=0.033509
+  done t1_tax_column          tabula   trial 3  11.1s  cost=0.033552000000000005
+  done t2_insert_row          tabula   trial 1  12.4s  cost=0.040233
+  done t2_insert_row          tabula   trial 2  10.7s  cost=0.0383666
+  done t2_insert_row          tabula   trial 3  10.5s  cost=0.037811
+  done t2_insert_row          default  trial 3  13.7s  cost=0.031084999999999995
+  done t3_delete_test_rows    default  trial 1  9.8s  cost=0.03253
+  done t3_delete_test_rows    default  trial 2  9.8s  cost=0.0323462
+  done t2_insert_row          default  trial 2  28.2s  cost=0.053181599999999996
+  done t3_delete_test_rows    tabula   trial 1  17.9s  cost=0.0412968
+  done t3_delete_test_rows    tabula   trial 2  13.4s  cost=0.0391788
+  done t3_delete_test_rows    default  trial 3  10.2s  cost=0.0303462
+  done t3_delete_test_rows    tabula   trial 3  13.7s  cost=0.0394604
+  done t4_fix_summary         default  trial 1  10.4s  cost=0.028334799999999997
+  done t4_fix_summary         default  trial 2  10.1s  cost=0.026258399999999998
+  done t4_fix_summary         tabula   trial 1  13.7s  cost=0.047322399999999994
+  done t4_fix_summary         default  trial 3  10.0s  cost=0.025071999999999997
+  done t4_fix_summary         tabula   trial 2  14.0s  cost=0.0457046
+  done t5_rename_sheet        default  trial 1  9.1s  cost=0.019642
+  done t4_fix_summary         tabula   trial 3  13.5s  cost=0.0453196
+  done t5_rename_sheet        tabula   trial 1  10.3s  cost=0.0321586
+  done t5_rename_sheet        default  trial 2  8.5s  cost=0.0186956
+  done t5_rename_sheet        tabula   trial 2  8.3s  cost=0.030906
+  done t5_rename_sheet        default  trial 3  8.9s  cost=0.0191032
+  done t5_rename_sheet        tabula   trial 3  9.3s  cost=0.033402600000000005
+wrote /Users/shashankbhat/Projects/compiler_project/demo/runs/live-sonnet/REPORT.md
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t2_insert_row          default  FAIL 7/11
+  t2_insert_row          default  PASS 11/11
+  t2_insert_row          default  FAIL 7/11
+  t2_insert_row          tabula   PASS 11/11
+  t2_insert_row          tabula   PASS 11/11
+  t2_insert_row          tabula   PASS 11/11
+  t3_delete_test_rows    default  FAIL 7/9
+  t3_delete_test_rows    default  PASS 9/9
+  t3_delete_test_rows    default  FAIL 7/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t4_fix_summary         default  PASS 9/9
+  t4_fix_summary         default  PASS 9/9
+  t4_fix_summary         default  PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t5_rename_sheet        default  PASS 7/7
+  t5_rename_sheet        default  PASS 7/7
+  t5_rename_sheet        default  PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7

@@ -1,0 +1,7 @@
+You are working in a folder that contains an Excel workbook, book.xlsx.
+
+Task: A sale was left out of the Sales sheet. Insert it as a new row directly below row 10 (so it becomes row 11): Region "West", Rep "Dana Lee", Units 40, Unit Price 125, with Revenue and Commission calculated the same way as the other rows. Every total and every figure on the Summary sheet must include the new sale.
+
+Save your changes to book.xlsx in place (keep the file name). Keep calculated values as live Excel formulas rather than typing in computed numbers. Only a few shell commands are available here; if one is refused, do the step another way (for example, create files with the Write tool). When you are done, reply with a short summary of what you changed.
+
+Method: use Python 3 with the openpyxl library (already installed) to read and edit the workbook. Run your scripts with python3.

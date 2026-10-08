@@ -1,0 +1,18 @@
+{
+  "task": "t3_delete_test_rows",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "claude",
+  "model": "haiku",
+  "dir": "demo/runs/live-haiku/t3_delete_test_rows__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 37.4,
+  "tool_calls": 8,
+  "cost_usd": 0.0453451,
+  "num_turns": 9,
+  "is_error": false,
+  "final_message": "Perfect! The task is complete. Here's a summary of the changes:\n\n## Summary\n\n\u2713 **Deleted two TEST rows** from the Sales sheet (previously at rows 8 and 15)\n- Both rows contained Rep \"TEST\" with test data (1 unit, $1 price, $1 revenue, $0.06 commission each)\n\n\u2713 **All rows below moved up** as required\n- Data rows: now 18 rows (row 2-19) instead of 20\n- Totals row: now at row 20 (instead of row 22)\n\n\u2713 **All formulas remain live and correct**\n- Sum formulas automatically adjusted: `=SUM(C2:C19)`, `=SUM(E2:E19)`, `=SUM(F2:F19)`\n- Commission formulas still reference CommissionRate\n- Summary sheet formulas updated to reference new row 20\n- SUMIF and AVERAGE formulas auto-adjusted for the removed rows\n\n\u2713 **All totals are correct**\n- Total Units: 617 \u2192 615\n- Total Revenue: 76,269 \u2192 76,267\n- Total Commission: 4,576.14 \u2192 4,576.02\n- Summary figures all updated accordingly\n\nThe file **book.xlsx** has been saved in place with all changes applied.",
+  "permission_denials": 0,
+  "model_id": "claude-haiku-4-5-20251001"
+}

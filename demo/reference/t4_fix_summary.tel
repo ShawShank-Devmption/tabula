@@ -1,0 +1,6 @@
+# T4: B4 summed revenue instead of commission; B6 matched "North" against the Rep column
+in "Summary" {
+  set B4 =Sales!F22
+  set B6 =SUMIF(Sales!A2:A21,"North",Sales!E2:E21)
+}
+expect Summary!B4 = Sales!E22*CommissionRate

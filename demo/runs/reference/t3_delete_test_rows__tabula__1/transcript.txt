@@ -1,0 +1,20 @@
+tabula: /Users/shashankbhat/Projects/compiler_project/demo/reference/t3_delete_test_rows.tel on book.xlsx
+
+APPLIED: wrote book.xlsx (30 cells synced, re-read and verified).
+
+affected formulas (value changes) (6)
+  Sales!C20        617 -> 615
+  Sales!E20        76269 -> 76267
+  Sales!F20        4576.14 -> 4576.02
+  Summary!B3       76269 -> 76267
+  Summary!B4       4576.14 -> 4576.02
+  Summary!B5       3813.45 -> 4237.05555555556
+
+relocated: 30 formula(s) rewritten to follow moved/renamed cells
+
+expects
+  line 6    COUNTIF(Sales!B2:B19,"TEST") = 0         PASS
+  line 7    Summary!B3 = SUM(Sales!E2:E19)           PASS
+
+stats: 5 statements -> 4 ops (0 dead writes removed); 44 of 44 formulas recomputed in 0.241 ms
+sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353

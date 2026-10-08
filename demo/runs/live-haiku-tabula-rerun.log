@@ -1,0 +1,47 @@
+15 run(s) -> /Users/shashankbhat/Projects/compiler_project/demo/runs/live-haiku
+  done t1_tax_column          tabula   trial 3  24.4s  cost=0.0354096
+  done t1_tax_column          tabula   trial 1  29.3s  cost=0.0386032
+  done t1_tax_column          tabula   trial 2  33.4s  cost=0.039007799999999995
+  done t2_insert_row          tabula   trial 1  68.9s  cost=0.06981630000000001
+  done t3_delete_test_rows    tabula   trial 1  37.4s  cost=0.0453451
+  done t2_insert_row          tabula   trial 2  65.6s  cost=0.0656643
+  done t2_insert_row          tabula   trial 3  61.8s  cost=0.066658
+  done t3_delete_test_rows    tabula   trial 2  37.7s  cost=0.046550600000000004
+  done t3_delete_test_rows    tabula   trial 3  44.6s  cost=0.0520335
+  done t4_fix_summary         tabula   trial 2  29.0s  cost=0.03876689999999999
+  done t4_fix_summary         tabula   trial 1  31.4s  cost=0.041317700000000006
+  done t4_fix_summary         tabula   trial 3  30.0s  cost=0.0409767
+  done t5_rename_sheet        tabula   trial 1  21.0s  cost=0.0269154
+  done t5_rename_sheet        tabula   trial 2  19.9s  cost=0.0269527
+  done t5_rename_sheet        tabula   trial 3  19.6s  cost=0.0255716
+wrote /Users/shashankbhat/Projects/compiler_project/demo/runs/live-haiku/REPORT.md
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          default  PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t1_tax_column          tabula   PASS 11/11
+  t2_insert_row          default  PASS 11/11
+  t2_insert_row          default  FAIL 7/11
+  t2_insert_row          default  FAIL 7/11
+  t2_insert_row          tabula   PASS 11/11
+  t2_insert_row          tabula   PASS 11/11
+  t2_insert_row          tabula   PASS 11/11
+  t3_delete_test_rows    default  PASS 9/9
+  t3_delete_test_rows    default  FAIL 8/9
+  t3_delete_test_rows    default  FAIL 5/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t3_delete_test_rows    tabula   PASS 9/9
+  t4_fix_summary         default  FAIL 6/9
+  t4_fix_summary         default  PASS 9/9
+  t4_fix_summary         default  PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t4_fix_summary         tabula   PASS 9/9
+  t5_rename_sheet        default  FAIL 4/7
+  t5_rename_sheet        default  PASS 7/7
+  t5_rename_sheet        default  PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7
+  t5_rename_sheet        tabula   PASS 7/7

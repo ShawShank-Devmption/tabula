@@ -1,0 +1,18 @@
+{
+  "task": "t2_insert_row",
+  "arm": "tabula",
+  "trial": 3,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t2_insert_row__tabula__3",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 11.0,
+  "tool_calls": 5,
+  "cost_usd": 0.0358742,
+  "num_turns": 6,
+  "is_error": false,
+  "final_message": "I inserted the missing sale as row 11 on the Sales sheet and saved `book.xlsx` in place. Tabula re-read the file after writing and verified it.\n\n- **New row:** West, Dana Lee, 40 units at 125. Revenue is `=C11*D11`, which gives 5,000. Commission is `=E11*CommissionRate`, which gives 300.\n- **Totals:** The total row moved to row 23, and its sums now cover the new row.\n  - Units: 617 \u2192 657\n  - Revenue: 76,269 \u2192 81,269\n  - Commission: 4,576.14 \u2192 4,876.14\n- **Summary sheet:** Every figure now includes the sale.\n  - Total revenue: 81,269\n  - Total commission: 4,876.14\n  - Average revenue (`SalesRevenue`): 3,813.45 \u2192 3,869.95\n  - The North-only total is unchanged, since the new sale is in the West.\n  - The target check still compares against the updated total.\n\nThe two checks in the script, that the Sales revenue total equals the sum of E2:E22 and that Summary!B3 equals it, both passed.\n\nI left `edit.tel` in the folder.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

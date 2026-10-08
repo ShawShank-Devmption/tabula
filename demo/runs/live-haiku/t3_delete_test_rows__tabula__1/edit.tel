@@ -1,0 +1,4 @@
+in "Sales" {
+  delete rows 15
+  delete rows 8
+}

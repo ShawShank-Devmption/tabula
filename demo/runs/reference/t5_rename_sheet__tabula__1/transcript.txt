@@ -1,0 +1,8 @@
+tabula: /Users/shashankbhat/Projects/compiler_project/demo/reference/t5_rename_sheet.tel on book.xlsx
+
+APPLIED: wrote book.xlsx (3 cells synced, re-read and verified).
+
+relocated: 3 formula(s) rewritten to follow moved/renamed cells
+
+stats: 1 statements -> 1 ops (0 dead writes removed); 4 of 48 formulas recomputed in 0.059 ms
+sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353

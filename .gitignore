@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+.DS_Store
+demo/.venv/
+playground/
+.tabula-*
+# course material from the university: kept locally, not redistributed
+FALLSEM2026-27_VL_BCSE307P_*_Compiler-lab-project-instruction.pdf

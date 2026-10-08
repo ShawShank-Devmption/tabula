@@ -1,0 +1,13 @@
+{
+  "task": "t1_tax_column",
+  "arm": "default",
+  "trial": 1,
+  "driver": "reference",
+  "model": null,
+  "dir": "demo/runs/reference/t1_tax_column__default__1",
+  "returncode": 0,
+  "timed_out": false,
+  "is_error": false,
+  "duration_s": 0.09,
+  "final_message": "added Tax column G and Summary!B8"
+}

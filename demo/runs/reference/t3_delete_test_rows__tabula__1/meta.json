@@ -1,0 +1,13 @@
+{
+  "task": "t3_delete_test_rows",
+  "arm": "tabula",
+  "trial": 1,
+  "driver": "reference",
+  "model": null,
+  "dir": "demo/runs/reference/t3_delete_test_rows__tabula__1",
+  "returncode": 0,
+  "timed_out": false,
+  "is_error": false,
+  "duration_s": 0.12,
+  "final_message": "sha256: d806f82d88b78151e7ebb448686baea017fbd7f9ef2daf406ca93d856c7e3353"
+}

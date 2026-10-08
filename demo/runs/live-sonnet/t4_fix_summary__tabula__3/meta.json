@@ -1,0 +1,18 @@
+{
+  "task": "t4_fix_summary",
+  "arm": "tabula",
+  "trial": 3,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t4_fix_summary__tabula__3",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 12.4,
+  "tool_calls": 6,
+  "cost_usd": 0.040932600000000006,
+  "num_turns": 7,
+  "is_error": false,
+  "final_message": "I fixed the two wrong Summary figures in `book.xlsx` and saved the file in place. Both are still live formulas, and the other sheets are untouched.\n\n- **Total commission (`Summary!B4`):** it was `=Sales!E22`, which is total revenue. It is now `=Sales!F22`, the commission total, and shows 4576.14.\n- **North revenue (`Summary!B6`):** the SUMIF tested the Rep column (`Sales!B2:B21`) for \"North\", so it returned 0. It now tests the Region column (`Sales!A2:A21`) and shows 21816.\n\nThe check passed with no errors and `apply` re-read the saved file to verify it. The 4576.14 and 21816 are Tabula's predicted values, because the file has no Excel-cached values yet. I didn't open it in Excel.\n\nI left `edit.tel` in the folder.",
+  "permission_denials": 1,
+  "model_id": "claude-sonnet-5-5"
+}

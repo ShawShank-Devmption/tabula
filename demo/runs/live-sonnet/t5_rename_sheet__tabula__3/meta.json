@@ -1,0 +1,18 @@
+{
+  "task": "t5_rename_sheet",
+  "arm": "tabula",
+  "trial": 3,
+  "driver": "claude",
+  "model": "sonnet",
+  "dir": "demo/runs/live-sonnet/t5_rename_sheet__tabula__3",
+  "returncode": 0,
+  "timed_out": false,
+  "duration_s": 8.0,
+  "tool_calls": 4,
+  "cost_usd": 0.029184599999999998,
+  "num_turns": 5,
+  "is_error": false,
+  "final_message": "I renamed the sheet \"Sales\" to \"Q3 Sales\" and saved `book.xlsx` in place. Tabula applied the edit and re-read the file to verify it.\n\n- **Formulas:** The three formulas on Summary that pointed at Sales now point at 'Q3 Sales': B3, B4 and B6. They're still live formulas.\n- **Named range:** `SalesRevenue` now refers to `'Q3 Sales'!$E$2:$E$21`. Summary!B5, which uses that name, needed no change.\n- **Check:** An `expect` that Summary!B3 equals `'Q3 Sales'!E22` passed.\n\nThe edit script is `edit.tel` in the same folder.",
+  "permission_denials": 0,
+  "model_id": "claude-sonnet-5-5"
+}

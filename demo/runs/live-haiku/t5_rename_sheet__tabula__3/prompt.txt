@@ -1,0 +1,7 @@
+You are working in a folder that contains an Excel workbook, book.xlsx.
+
+Task: Rename the sheet "Sales" to "Q3 Sales". Everything that refers to it (formulas on other sheets and named ranges) must keep working.
+
+Save your changes to book.xlsx in place (keep the file name). Keep calculated values as live Excel formulas rather than typing in computed numbers. Only a few shell commands are available here; if one is refused, do the step another way (for example, create files with the Write tool). When you are done, reply with a short summary of what you changed.
+
+Method: use the Tabula command-line tool in this folder (./tabula) to read and edit the workbook. Its language reference is TEL.md; read it first. Workflow: ./tabula inspect book.xlsx, write an edit script (for example edit.tel), ./tabula check book.xlsx edit.tel, fix anything it reports, then ./tabula apply book.xlsx edit.tel --in-place.
