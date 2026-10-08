@@ -250,6 +250,16 @@ def check_task(task_id: str, path: Path) -> list[dict]:
             c.data_rows(book, "Q3 Sales", data)
         c.live(book, "Summary follows the renamed sheet", "'Q3 Sales'!C2", 100,
                [("Summary!B3", f["total_revenue"] + (100 - data[0][2]) * data[0][3])])
+    if task_id == "t1_tax_column":
+        c.data_rows(book, "Sales", data)
+        # The tax addition permits only G cells and Summary row 8 to change.
+        from suite_evaluate import cell_style, cells, schema
+        for sheet in original.wb.sheetnames:
+            allowed = (lambda a: a.startswith("G")) if sheet == "Sales" else ((lambda a: a in ("A8", "B8")) if sheet == "Summary" else (lambda a: False))
+            a, b = cells(original.wb[sheet]), cells(book.wb[sheet])
+            changed = [addr for addr in set(a) | set(b) if not allowed(addr) and (addr not in a or addr not in b or a[addr].value != b[addr].value or cell_style(a[addr]) != cell_style(b[addr]))]
+            c.add(f"preservation outside tax edit on {sheet}", not changed, "changed: " + ", ".join(changed[:8]))
+        c.add("workbook schema and defined names preserved", schema(book.wb) == schema(original.wb), "schema or names changed")
     c.no_errors(book)
     c.unchanged(book, original, "Inputs")
     return c.items

@@ -62,11 +62,26 @@ def apply(book, script_path, out=None, in_place=False, allow_specs=(), if_unchan
     """check, then write atomically if (and only if) there are no errors."""
     book = Path(book)
     output = book if in_place else Path(out)
+    try:
+        with xlsx.writer_locks(book, output):
+            destination_hash = xlsx.sha256(output) if output.exists() else None
+            return _apply_locked(book, script_path, output, allow_specs, if_unchanged,
+                                 allow_lossy, destination_hash)
+    except (xlsx.WriteRefused, OSError) as exc:
+        code = exc.code if isinstance(exc, xlsx.WriteRefused) else "E-WRITE"
+        plan = Plan(str(book), str(script_path), "", [], [])
+        plan.diagnostics.append(error(code, str(exc)))
+        return plan
+
+
+def _apply_locked(book, script_path, output, allow_specs, if_unchanged,
+                  allow_lossy, destination_hash):
     plan, loaded = check(book, script_path, allow_specs, predict_loss=False)
-    lock = xlsx.lock_file(book)
-    if lock is not None:
-        plan.diagnostics.append(error("E-LOCKED", f"the workbook is open in Excel ({lock.name} "
-                                      "exists); close it first or your edits could be lost"))
+    for path in {book, output}:
+        lock = xlsx.lock_file(path)
+        if lock is not None:
+            plan.diagnostics.append(error("E-LOCKED", f"the workbook is open in Excel ({lock.name} "
+                                          "exists); close it first or your edits could be lost"))
     if if_unchanged and if_unchanged.lower() != loaded.sha256:
         plan.diagnostics.append(error("E-CONFLICT", "the workbook changed since it was checked "
                                       f"(sha256 {loaded.sha256[:12]}..., expected "
@@ -74,7 +89,8 @@ def apply(book, script_path, out=None, in_place=False, allow_specs=(), if_unchan
     if not plan.ok:
         return plan
     try:
-        plan.synced = xlsx.write_back(loaded, plan.sim.structure, output, allow_lossy)
+        plan.synced = xlsx.write_back(loaded, plan.sim.structure, output, allow_lossy,
+                                     destination_hash=destination_hash)
     except xlsx.WriteRefused as e:
         plan.diagnostics.append(error(e.code, e.message))
         return plan

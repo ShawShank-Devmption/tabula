@@ -13,9 +13,9 @@ from ..emitter import emit
 from ..lexer import LexError
 from ..parser import ParseError, parse_target
 from ..refs import MAX_COL, MAX_ROW, index_to_col, quote_sheet
-from ..relocate import move_position, relocate, rename_sheet
+from ..relocate import move_position, move_span, relocate, rename_sheet
 from ..values import BLANK, UNKNOWN, display, is_error, is_number, values_equal
-from ..workbook import Cell, formula_cell, literal_cell
+from ..workbook import Cell, formula_cell, is_simulable, literal_cell
 from . import ir
 
 
@@ -126,12 +126,9 @@ def simulate(engine, ops: list, allow: Allowlist | None = None) -> SimResult:
                 seeds.add((sheet.sid, op.col, op.row))
         elif isinstance(op, ir.Structural):
             sheet = wb.sheet(op.sheet)
-            blockers = sheet.structural_blockers() + [
-                f"{what} on sheet '{other.name}' that refer to it"
-                for other in wb.sheets if other is not sheet
-                for what in other.rules_referring_to(sheet.name)]
+            blockers = _address_blockers(wb)
             if blockers or unparsed:
-                why = (f"sheet '{sheet.name}' has " + ", ".join(blockers) if blockers else
+                why = ("the workbook contains " + ", ".join(blockers) if blockers else
                        f"the workbook has {unparsed} formula(s)/name(s) Tabula cannot parse, "
                        "which could not be relocated")
                 diags.append(error("E-STRUCT", f"cannot {op.verb} {op.axis} safely: {why}",
@@ -141,6 +138,10 @@ def simulate(engine, ops: list, allow: Allowlist | None = None) -> SimResult:
             if allow is not None and not allow.whole_sheet(sheet.name):
                 diags.append(error("E-PERM", f"{op.verb} {op.axis} changes all of sheet "
                                    f"'{sheet.name}', which --allow does not cover", op.line))
+                continue
+            if op.verb == "insert" and _insertion_overflows(sheet, op.axis, op.at, op.n):
+                diags.append(error("E-STRUCT", f"cannot insert {op.axis} safely: stored cells "
+                                   "or formatting would move beyond Excel's grid", op.line))
                 continue
             n = op.n if op.verb == "insert" else -op.n
             _relocate_all(wb, pending, sheet.name, op.axis, op.at, n)
@@ -158,8 +159,15 @@ def simulate(engine, ops: list, allow: Allowlist | None = None) -> SimResult:
         elif isinstance(op, ir.RenameSheet):
             if allow is not None and not allow.everything:
                 diags.append(error("E-PERM", "rename sheet needs --allow '*'", op.line))
-                continue
+                break  # later ops were resolved against the renamed sheet table
             sheet = wb.sheet(op.old)
+            blockers = _address_blockers(wb)
+            if blockers or unparsed:
+                why = ", ".join(blockers) if blockers else (
+                    f"the workbook has {unparsed} formula(s)/name(s) Tabula cannot parse")
+                diags.append(error("E-STRUCT", f"cannot rename sheet safely: {why}", op.line,
+                                   hint="Tabula cannot relocate these stored references"))
+                break
             _rename_all(wb, pending, sheet.name, op.new)
             res.structure.append(("rename_sheet", sheet.name, op.new))
             sheet.name = op.new
@@ -184,7 +192,7 @@ def simulate(engine, ops: list, allow: Allowlist | None = None) -> SimResult:
         # formula that reads an edited sheet.
         seeds |= {key for key, (cells, ranges) in engine.graph.precedents.items()
                   if any(c[0] in edited for c in cells) or any(sid in edited for sid, _ in ranges)}
-    stats = engine.recompute(seeds)
+    stats = engine.recompute(seeds, changed=bool(res.structure or seeds))
 
     # -- new circular references ---------------------------------------------
     reported: set = set()
@@ -212,8 +220,8 @@ def simulate(engine, ops: list, allow: Allowlist | None = None) -> SimResult:
                 if cell.raw == "" and b_raw == "":
                     continue
                 res.writes.append(Change(addr, b_raw, b_val, cell.raw, cell.value, unverified))
-            elif cell.kind == "formula":
-                if cell.text_changed:
+            elif cell.kind in ("formula", "unparsed"):
+                if cell.kind == "formula" and cell.text_changed:
                     res.relocated += 1
                 if cell.uid in before and not values_equal(cell.value, b_val):
                     res.affected.append(Change(addr, b_raw, b_val, cell.raw, cell.value, unverified))
@@ -294,6 +302,44 @@ def _move_cells(sheet, axis: str, at: int, n: int) -> None:
         if q is not None:
             moved[(col, q) if rows else (q, row)] = cell
     sheet.cells = moved
+    moved_grid = set()
+    for col, row in getattr(sheet, "grid_cells", ()):
+        q = move_position(row if rows else col, at, n, limit)
+        if q is not None:
+            moved_grid.add((col, q) if rows else (q, row))
+    sheet.grid_cells = moved_grid
+    attr = "grid_rows" if rows else "grid_cols"
+    setattr(sheet, attr, [span for lo, hi in getattr(sheet, attr, ())
+                         if (span := move_span(lo, hi, at, n, limit)) is not None])
+
+
+def _address_blockers(wb):
+    # Rules can refer indirectly through names or text expressions. Do not infer
+    # absence of dependencies by a regex; conservatively refuse workbook-wide.
+    blockers = [f"{what} on sheet '{sheet.name}'" for sheet in wb.sheets
+                for what in sheet.structural_blockers()]
+    for sheet in wb.sheets:
+        count = sum(cell.kind == "formula" and not cell.simulable
+                    for cell in sheet.cells.values())
+        if count:
+            blockers.append(f"{count} unsupported formula(s) on sheet '{sheet.name}' "
+                            "whose addresses cannot be verified")
+    count = sum(dn.ast is not None and not is_simulable(dn.ast, from_file=True)
+                for dn in wb.names.values())
+    if count:
+        blockers.append(f"{count} unsupported defined name(s) whose addresses cannot be verified")
+    return blockers
+
+
+def _insertion_overflows(sheet, axis, at, n):
+    rows = axis == "rows"
+    limit = MAX_ROW if rows else MAX_COL
+    positions = set(sheet.cells) | set(getattr(sheet, "grid_cells", ()))
+    coordinates = (row if rows else col for col, row in positions)
+    if any(p >= at and p + n > limit for p in coordinates):
+        return True
+    return any(hi >= at and hi + n > limit
+               for _, hi in getattr(sheet, "grid_rows" if rows else "grid_cols", ()))
 
 
 def _rename_all(wb, pending, old: str, new: str) -> None:

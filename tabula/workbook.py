@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 
 from . import parser as P
 from .functions import EXCEL_FUNCTIONS, SUPPORTED
+from .refs import RangeRef
 from .values import BLANK, UNKNOWN, is_error, to_number
 
 _uids = itertools.count(1)
@@ -164,6 +165,41 @@ class Workbook:
                 yield sheet, col, row, cell
 
     # -- precedents (used to build the dependency graph) --------------------
+    def reference_range(self, host: Sheet, node):
+        """Resolve a reference (including name aliases) to its sheet and range."""
+        seen = set()
+        while isinstance(node, P.Name):
+            dn = self.lookup_name(node.ident, host.sid, node.sheet)
+            if dn is None or dn.ast is None or id(dn) in seen:
+                return None
+            seen.add(id(dn))
+            host = self.by_sid(dn.scope) if dn.scope else host
+            node = dn.ast
+        if not isinstance(node, (P.Ref, P.RangeNode)):
+            return None
+        sheet = self.sheet(node.sheet) if node.sheet else host
+        if sheet is None:
+            return None
+        rng = RangeRef(node.ref, node.ref) if isinstance(node, P.Ref) else node.rng
+        return sheet, rng
+
+    def names_simulable(self, host: Sheet, ast) -> bool:
+        """Classification includes defined-name bodies, with cycle protection."""
+        pending = [(ast, host, frozenset())]
+        while pending:
+            root, h, ancestors = pending.pop()
+            for node in P.walk(root):
+                if not isinstance(node, P.Name):
+                    continue
+                dn = self.lookup_name(node.ident, h.sid, node.sheet)
+                if dn is None:  # an actual unknown name evaluates to #NAME?
+                    continue
+                if dn.ast is None or id(dn) in ancestors or not is_simulable(dn.ast, True):
+                    return False
+                scope = self.by_sid(dn.scope) if dn.scope else h
+                pending.append((dn.ast, scope, ancestors | {id(dn)}))
+        return True
+
     def precedents(self, host: Sheet, ast) -> tuple[set, list]:
         """(cell keys, [(sid, bounds)]) that a formula hosted on `host` reads."""
         cells: set = set()
@@ -173,7 +209,18 @@ class Workbook:
         while pending:
             node_root, h = pending.pop()
             for node in P.walk(node_root):
-                if isinstance(node, P.Ref):
+                if isinstance(node, P.Call) and node.fname == "SUMIF" and len(node.args) == 3:
+                    # Excel sizes sum_range from criteria_range, using only the
+                    # supplied sum_range's top-left cell. These implicit reads
+                    # must participate in invalidation AND cycle detection.
+                    criteria = self.reference_range(h, node.args[0])
+                    sums = self.reference_range(h, node.args[2])
+                    if criteria is not None and sums is not None:
+                        sheet, rng = sums
+                        c, r, _, _ = rng.bounds()
+                        height, width = criteria[1].shape()
+                        ranges.append((sheet.sid, (c, r, c + width - 1, r + height - 1)))
+                elif isinstance(node, P.Ref):
                     sheet = self.sheet(node.sheet) if node.sheet else h
                     if sheet is not None:
                         cells.add((sheet.sid, node.ref.col, node.ref.row))

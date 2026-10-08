@@ -16,7 +16,7 @@ from .parser import ParseError, dump_ast, parse_formula
 from .refs import CellRef, index_to_col
 from .values import (BLANK, CYCLE_ERR, NUM_ERR, REF_ERR, UNKNOWN, VALUE_ERR, display,
                      is_number, values_equal)
-from .workbook import MISSING, Cell, Workbook, formula_cell, literal_cell, parse_literal
+from .workbook import MISSING, Cell, Workbook, formula_cell, is_simulable, literal_cell, parse_literal
 
 
 class Engine:
@@ -78,6 +78,7 @@ class Engine:
         key = (sheet.sid, col, row)
         cell = sheet.cells.get((col, row))
         if cell is not None and cell.kind == "formula":
+            cell.simulable = cell.simulable and self.wb.names_simulable(sheet, cell.ast)
             cells, ranges = self.wb.precedents(sheet, cell.ast)
             self.graph.set_formula(key, cells, ranges)
         else:
@@ -94,7 +95,7 @@ class Engine:
         return self.wb.by_sid(sid).cells.get((col, row))
 
     # ------------------------------------------------------------ recomputation
-    def recompute(self, seeds=None, initial: bool = False) -> dict:
+    def recompute(self, seeds=None, initial: bool = False, changed: bool = False) -> dict:
         """Recompute `seeds` and their transitive dependents (all formulas if None).
 
         initial=True is the first computation after loading: unsimulable formulas
@@ -102,8 +103,19 @@ class Engine:
         unsimulable formula whose inputs may have changed is marked unverified.
         """
         start = time.perf_counter()
-        dirty = set(self.graph.precedents) if seeds is None else self.graph.closure(seeds)
-        self.last_dirty = dirty
+        seeds = None if seeds is None else set(seeds)
+        invalidated = set()
+        if not initial and (changed or seeds is None or seeds):
+            # Unknown function/name semantics can hide reads (INDIRECT, OFFSET,
+            # spill/array syntax). Explicit AST edges are not proof of complete
+            # dependencies, so any edit invalidates these cached results.
+            for sheet, col, row, cell in self.wb.all_cells():
+                if cell.kind == "unparsed" or (cell.kind == "formula" and not cell.simulable):
+                    cell.unverified = True
+                    invalidated.add((sheet.sid, col, row))
+        dirty = (set(self.graph.precedents) if seeds is None else
+                 self.graph.closure(seeds | invalidated))
+        self.last_dirty = dirty | invalidated
         order, cyclic = self.graph.order(dirty)
         self.cyclic = (self.cyclic - dirty) | cyclic
         for key in cyclic:
@@ -138,6 +150,9 @@ class Engine:
 
     def evaluate_expr(self, ast, host: str):
         """(value, unverified) of an ad-hoc expression, e.g. a TEL `expect`."""
+        sheet = self.wb.sheet(host)
+        if not is_simulable(ast, True) or not self.wb.names_simulable(sheet, ast):
+            return UNKNOWN, True
         self._saw_unknown = self._saw_unverified = False
         v = self.evaluator.evaluate(ast, host)
         if self._saw_unknown:
@@ -260,4 +275,3 @@ def explain_cell(name: str, cell: Cell, engine: Engine, sheet) -> list[str]:
     if cell.cached is not MISSING:
         out.append(f"excel  : {display(cell.cached)}  (cached in the file)")
     return out
-
