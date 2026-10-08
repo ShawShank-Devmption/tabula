@@ -63,10 +63,12 @@ One statement per line. A line starting with `#` is a comment.
   - a reference to a deleted cell becomes `#REF!`.
 
   Renaming a sheet updates all references to it.
+- **Structural edits are refused rather than guessed** (`E-STRUCT`) when the workbook contains anything whose addresses Tabula cannot update. See the error table below.
 - **Statements run in order.** After `insert rows 11`, the old row 11 is row 12 for every later
   statement. When deleting several separate rows, delete from the bottom up, or account for
   the shift.
-- `expect` is checked after the whole script, on the final workbook.
+- `expect` is checked after the whole script, on the final workbook. If it depends on something Tabula cannot compute, it is reported as **unverified**, never as passed.
+- `apply` keeps a small hidden lock file (`.<name>.xlsx.tabula.lock`) next to the workbook, so two `apply` runs cannot overwrite each other. If the workbook changes while `apply` is running, nothing is written (`E-CONFLICT`).
 
 ## Reading `check` output
 
@@ -97,7 +99,7 @@ Common error codes:
 | `E-NOSHEET` | say which sheet |
 | `E-CYCLE` | circular reference |
 | `E-EXPECT` | an expectation failed |
-| `E-STRUCT` | insert/delete refused because some addresses could not be updated: merged cells, tables, conditional formatting, data validation, hyperlinks, a print area or an autofilter on the sheet, or rules on another sheet that point at it |
+| `E-STRUCT` | insert/delete/rename refused because some stored address could not be updated safely: the workbook (any sheet) has charts, pivots, tables, merged cells, conditional formatting, validation, hyperlinks, a print area, an autofilter or external links; or formulas Tabula cannot parse or does not support (such as `INDIRECT`); or an insert would push content off the grid |
 
 ## Examples (inventory workbook with sheets `Stock` and `Report`)
 

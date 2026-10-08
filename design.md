@@ -2,7 +2,7 @@
 
 **Project:** Tabula — A Statically Checked Spreadsheet Edit Language for AI Agents, built on a Compiled Formula Engine
 
-**Revision 2 (2026-10-08).** `requirements.md` says *what* and *why*; this document says *how*. Revision 1 (Review 1) specified the formula compiler and sheet engine. Revision 2 makes them Excel-compatible and multi-sheet, and adds the TEL compiler, the `.xlsx` boundary and the A/B demo.
+**Revision 2 (2026-10-08), safety hardening of the same date (§6.3, §7, §8.6).** `requirements.md` says *what* and *why*; this document says *how*. Revision 1 (Review 1) specified the formula compiler and sheet engine. Revision 2 makes them Excel-compatible and multi-sheet, and adds the TEL compiler, the `.xlsx` boundary and the A/B demo.
 
 ---
 
@@ -58,7 +58,8 @@ tabula/
 ├── graph.py           DependencyGraph: cell + range edges, closure, Kahn, Tarjan, cycle path
 ├── engine.py          Engine (recompute, taint, stats, expression evaluation) + REPL Sheet facade
 ├── diagnostics.py     Diagnostic, caret/text and JSON rendering, edit-distance suggestions
-├── xlsx.py            openpyxl boundary: load, write_back, fidelity guard, lock file, sha256
+├── xlsx.py            openpyxl boundary: snapshot load, write_back, fidelity guard, writer locks,
+│                      commit-time revalidation, sha256
 ├── tel/
 │   ├── lexer.py       line scanner with parser-controlled modes
 │   ├── parser.py      TEL AST + recursive-descent statement parser with line recovery
@@ -121,10 +122,10 @@ error[E-SHEET] edits.tel:3:5: unknown sheet 'Summry'
 | `E-CYCLE` | the edit creates a circular reference (path given) |
 | `E-EXPECT` | an `expect` is FALSE, an error, or not boolean |
 | `E-PERM` | write outside the `--allow` list |
-| `E-STRUCT` | structural edit refused, because some addresses would not be relocated. Causes: the sheet has merged cells, tables, conditional formatting, data validation, hyperlinks, a print area/titles or an autofilter; another sheet has validation or formatting rules that refer to it; or the workbook has formulas Tabula cannot parse |
+| `E-STRUCT` | insert/delete/rename refused, because some stored address might not be relocated. Applies **workbook-wide**: any sheet with charts, pivot tables, chart sheets, external links, merged cells, tables, conditional formatting, data validation, hyperlinks, a print area/titles or an autofilter; any unparsed formula or name; or any formula/name using functions Tabula does not simulate (e.g. `INDIRECT`, whose text addresses cannot be relocated). Also refused when an insert would push stored cells or formatting off the grid |
 | `E-FIDELITY` | saving would lose workbook parts (apply refused) |
-| `E-LOCKED` | workbook is open in Excel (apply refused) |
-| `E-CONFLICT` | `--if-unchanged` hash mismatch |
+| `E-LOCKED` | workbook (source or output) is open in Excel, before or during apply; or the platform lacks POSIX advisory locks |
+| `E-CONFLICT` | `--if-unchanged` hash mismatch, or the source/output file changed while apply was running |
 | `E-VERIFY` | the written file did not read back as intended (apply refused, input untouched) |
 | `E-WRITE` | the output could not be written, or the structural edits could not be replayed (input untouched) |
 | `W-OVERWRITE-FORMULA` | a constant replaces an existing formula (hard-coding) |
@@ -135,7 +136,7 @@ error[E-SHEET] edits.tel:3:5: unknown sheet 'Summry'
 | `W-SCOPE` | formula written to another sheet uses unqualified references (they refer to the target's sheet) |
 | `W-SHADOW` | `let` shadows an outer name |
 | `W-STALE-LET` | a `let`-bound address is used after a structural edit on its sheet |
-| `W-EXPECT-UNVERIFIED` | an `expect` depends on unverified values |
+| `W-EXPECT-UNVERIFIED` | an `expect` depends on unverified values or unsupported functions; it is reported as unverified, never as passed |
 | `W-LOSSY` | (check) saving this workbook would lose parts; apply needs `--allow-lossy` |
 
 ### 2.3 Plan Output
@@ -284,6 +285,7 @@ Workbook sheets (ordered), names {(scope_sid | None, NAME): DefinedName(ast)}
 ### 6.2 Dependency graph
 - **Cell edges:** `precedent key → {dependent formula keys}`.
 - **Range edges:** stored *symbolically*, per sheet, as `(bounds, dependent)`. They are not expanded, so whole-column references stay cheap.
+- `SUMIF(criteria, crit, sum)` reads the **effective** sum range: `sum`'s top-left cell sized like `criteria`, as Excel does. That range, not just the cells written in the formula, is a precedent edge, so it takes part in invalidation and in cycle detection.
 - `dependents(k)` returns the direct cell edges plus every range edge whose bounds contain `k`. Range edges are bucketed by column, so a lookup scans only ranges over `k`'s column. Ranges wider than 64 columns sit in a small per-sheet list.
 - Formula-to-formula precedents within a set use `formulas_in(sid, bounds)`. That iterates the smaller of the range and the sheet's formula index.
 
@@ -306,15 +308,16 @@ recompute(seeds):                       seeds = None → all formulas
   stats: |D|, total formulas, elapsed ms
 ```
 - At load, simulable formulas are computed by Tabula and non-simulable ones keep Excel's cached value; both are considered verified.
+- **Conservative invalidation.** Once anything is edited, *every* unparsed formula and every formula using an unsupported function or name is marked unverified, together with its dependents. Functions like `INDIRECT` or `OFFSET` can read cells that no AST edge shows, so missing edges are not proof that a cached value is still right. An `expect` over such values is reported unverified.
 - **Engine agreement** is the number of simulable formulas whose Tabula value equals the cached value (relative tolerance 1e-9).
 
 ## 7. I/O Boundary (`xlsx.py`)
 
 **Load.**
-- The workbook is opened twice with openpyxl: once with formulas and once with `data_only=True` for cached values.
+- The file is read **once into memory**. Both openpyxl loads (formulas, then `data_only=True` for cached values), the SHA-256 and the fidelity part counts all come from that one byte snapshot, so a save by another program mid-load cannot mix two versions.
 - Formulas are parsed. If parsing fails, the cell is `unparsed` (value = cached, no edges). Array and data-table formulas are also `unparsed`.
-- Dates become Excel serial numbers. Defined names are parsed at workbook and sheet scope.
-- Per-sheet `meta` counts merged ranges, tables, conditional-format ranges and data validations.
+- Dates become Excel serial numbers in the workbook's own date system (1900 or 1904 epoch). Defined names are parsed at workbook and sheet scope.
+- Per-sheet `meta` counts the address-bearing features Tabula does not relocate (see `E-STRUCT`). Stored cell positions (including style-only cells), row heights and column widths are recorded too, so grid overflow can be checked.
 - openpyxl warnings during load are captured; they signal lossy features.
 
 **Write back** (`apply` only, after a clean compile):
@@ -322,13 +325,15 @@ recompute(seeds):                       seeds = None → all formulas
 2. **Sync contents.** Every model cell flagged `touched` or `text_changed` is written at its final address: a literal; `None` for cleared cells (an empty-string literal clears); or `"=" + emit(ast)` with storage prefixes. Literal text that starts with `=` or looks like an error code (`"#N/A"`) gets `data_type 's'`, or openpyxl would store it as a formula or an error. Relocated defined names are rewritten too.
 3. **Save to a temporary file** in the same directory.
 4. **Fidelity guard.** Count zip parts per category (charts, drawings, media, pivot tables/caches, tables, comments, threaded comments, VBA, slicers, timelines, external links, controls, embeddings, custom XML) in the input and in the temporary file. Any decrease, or a lossy load warning, gives `E-FIDELITY` unless `--allow-lossy` is set.
-5. **Verify.** Reload the temporary file and compare every synced cell with the model.
-6. `os.replace(temp, output)`. On any failure the temporary file is deleted and the input is untouched.
+5. **Verify.** Reload the temporary file and compare every synced cell with the model. After a structural edit, check **every** model cell (including untouched values that merely moved) and reject any unexpected non-empty cell.
+6. **Revalidate, then commit.** Re-check Excel owner files for source and output, re-hash the source against the loaded snapshot, and check the output still matches its state at the start. Then `os.replace(temp, output)`. On any failure the temporary file is deleted and the input is untouched.
 
-**Guards before writing:**
-- Excel lock file `~$name` → `E-LOCKED`.
-- `--if-unchanged` must equal the input's SHA-256 (`check` prints it) → otherwise `E-CONFLICT`.
+**Guards:**
+- `apply` holds advisory `fcntl` locks on sidecar files (`.<name>.xlsx.tabula.lock`, kept on purpose) for source and output, acquired in sorted order. They serialise cooperating Tabula writers.
+- Excel lock file `~$name` (before apply and again just before commit) → `E-LOCKED`.
+- `--if-unchanged` must equal the input's SHA-256 (`check` prints it) → otherwise `E-CONFLICT`. A source or output that changes during apply → `E-CONFLICT`, and the other writer's file is preserved.
 - `apply` refuses on any error.
+- **Residual limit.** Excel and other programs ignore advisory locks, and the final checks and `os.replace` are separate filesystem operations. A short window remains in which an uncooperative writer can still save. This is not filesystem compare-and-swap.
 
 ## 8. TEL — the Edit Language
 
@@ -405,8 +410,8 @@ Simulation executes the IR on the in-memory workbook, in order:
 | Op | Effect |
 |---|---|
 | `SetCell` / `ClearCell` | `--allow` check (`E-PERM`); constant over formula (`W-OVERWRITE-FORMULA`); replace content, keeping the `uid`; mark `touched`; update graph edges |
-| Structural | Refuse (`E-STRUCT`) on sheets with merged cells, tables, CF or DV, or when unparsed formulas exist; relocate every formula, defined name and pending `expect`; move the sheet's cells; mark changed formulas `text_changed` |
-| `AddSheet` / `RenameSheet` | Update the sheet table; `rename_sheet` over all ASTs and names |
+| Structural | Refuse (`E-STRUCT`) when the workbook has any address-bearing feature Tabula does not relocate, any unparsed or unsupported formula/name, or when an insert would push cells/formatting off the grid. Otherwise relocate every formula, defined name and pending `expect`; move the sheet's cells and formatting metadata; mark changed formulas `text_changed` |
+| `AddSheet` / `RenameSheet` | Update the sheet table; `rename_sheet` over all ASTs and names. A rename is refused under the same workbook-wide rule as structural edits, and a refused rename stops the script, because later statements were resolved against the new name |
 | `Expect` | Queued, and relocated by later structural ops |
 
 After the last op:
@@ -459,7 +464,7 @@ With plain openpyxl, `insert_rows(11)` alone leaves `=SUM(E2:E21)` in E23 (which
 | Resolver | sheets, names, functions, shapes, sizes, scopes | statement rejected; later statements still checked | `E-*` with hints |
 | Simulation | cycles, expectations, permissions, structural limits | whole script rejected | `E-*`; plan still shows what was computed |
 | Engine | runtime error values; cycles; unsimulated functions | per cell; taint for unknowns | error values; *unverified* list |
-| I/O | fidelity loss, locks, hash conflicts, verification failures | input file never modified | `E-FIDELITY` / `E-LOCKED` / `E-CONFLICT` |
+| I/O | fidelity loss, locks, concurrent changes, verification failures | input file and competing writers' files never overwritten | `E-FIDELITY` / `E-LOCKED` / `E-CONFLICT` / `E-VERIFY` |
 
 The script is a transaction: either every op is applied or none is.
 
@@ -493,7 +498,9 @@ The script is a transaction: either every op is applied or none is.
 | Relocation | Table-driven: insert above / inside / below ranges, absolute refs, whole-column and whole-row, delete partial / whole → `#REF!`, cross-sheet, names, rename with quoting |
 | Engine | Edge maintenance, range edges, closure, Kahn order, Tarjan cycles incl. cross-sheet, 5,000-deep chain without recursion, taint propagation, incremental ≡ full recompute |
 | TEL | Each statement form; each diagnostic code (one positive + one negative case); line recovery; dead-write elimination; fill expansion; simulation results; JSON golden snapshot |
-| I/O | Round trip (load → empty script → apply → reload, contents equal); atomicity (failure injected during save leaves the input unchanged); verification; fidelity guard on a workbook with a chart; lock-file and hash guards |
+| I/O | Round trip; atomicity (failure injected during save leaves the input unchanged); verification incl. moved and unexpected cells; fidelity guard; snapshot load; concurrent apply writers serialise; external save during apply is preserved; Excel owner file at commit time; 1904 dates; grid overflow (`tests/test_boundary_safety.py`) |
+| Dependencies | SUMIF effective ranges and implicit cycles; conservative invalidation of unsupported formulas; randomised incremental ≡ fresh full recompute (`tests/test_dependency_safety.py`) |
+| Evaluation | 15 held-out tasks; reference solutions pass; deliberately corrupted workbooks (constants, styles, unrelated rows) fail (`tests/test_demo_suite.py`) |
 | Differential | Tabula value vs Excel-cached value for every simulable formula in each corpus workbook saved by Excel |
 | Benchmark | Generated 10k-formula workbook: incremental vs full recompute (NFR-2) |
 | Demo | Reference TEL solutions pass every check; representative naive openpyxl solutions fail the checks they should |
@@ -511,7 +518,7 @@ The script is a transaction: either every op is applied or none is.
 | Symbolic range edges, bucketed by column | Expand ranges into cells | Whole-column references have 1,048,576 cells. A lookup scans only the ranges over that column; ranges wider than 64 columns sit in a per-sheet list. The bucketing cut a 2,500-deep chain edit from 962 ms to 10 ms (`tools/bench.py`) |
 | Full rebuild after structural edits | Incremental relocation of graph edges | Structural edits are rare. One proven code path is worth more than speed here |
 | Opaque cells + taint instead of guessing | Approximate unsupported functions | A verifier that guesses is worse than one that says "unverified" |
-| Refuse structural edits on merged / tables / CF / DV | Relocate them too | Keeps the guarantee honest within the time available; listed as a future enhancement |
+| Refuse structural edits **workbook-wide** when any address-bearing feature or unsupported formula exists | Per-sheet refusal with reference tracking; relocate those features | Rules, names and `INDIRECT` strings can point at a sheet indirectly, so per-sheet detection cannot prove safety. Workbook-wide refusal is safe, but blocks structural edits in many feature-rich workbooks; relocating these features is the main future enhancement |
 | Bytecode VM moved to stretch | Keep Revision 1 Phase 3 | The edit IR, its optimiser and the back end cover IR, optimisation and code generation with real payoff |
 | Headless Claude Code as the demo agent | Hand-rolled API agent | It is the agent people actually use with a shell; `--safe-mode` gives the same clean configuration for both arms |
 

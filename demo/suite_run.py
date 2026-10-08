@@ -52,7 +52,7 @@ def parse_args(argv=None):
     ap.add_argument('--tasks',default=','.join(t.id for t in TASKS))
     ap.add_argument('--arms',default='default,tabula')
     ap.add_argument('--trials',type=int,default=3)
-    ap.add_argument('--model',default='claude-sonnet-4-6')
+    ap.add_argument('--model',default='claude-sonnet-5-5')
     ap.add_argument('--budget',type=float,default=2.0)
     ap.add_argument('--timeout',type=int,default=600)
     ap.add_argument('--parallel',type=int,default=1)

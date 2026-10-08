@@ -168,7 +168,7 @@ Benchmarks confirm the gap. On SpreadsheetBench 2 (2026) the best model complete
 |----|-------------|
 | FR-11 | The system shall load `.xlsx` workbooks with formulas and Excel-cached values, translating dates to serial numbers and stripping storage prefixes such as `_xlfn.`. |
 | FR-12 | `inspect` shall report sheets, used ranges, header rows, defined names, function usage, and **engine agreement**: how many formulas Tabula evaluates to the same value as Excel's cache. |
-| FR-13 | Saving shall be atomic (write to a temporary file, then rename), verified (reload and compare every written cell), and guarded. It is refused when the saved file would lose workbook parts present in the input (fidelity guard), when the workbook is open in Excel (lock file), or when `--if-unchanged` does not match the file's SHA-256. |
+| FR-13 | Saving shall be atomic (write to a temporary file, then rename), verified (reload and compare every written cell, and after structural edits every cell), and guarded. It is refused when the saved file would lose workbook parts present in the input (fidelity guard), when source or output is open in Excel, when `--if-unchanged` does not match the file's SHA-256, or when source or output changes during apply. Cooperating writers are serialised by advisory locks. |
 
 ### TEL compiler
 
@@ -181,7 +181,7 @@ Benchmarks confirm the gap. On SpreadsheetBench 2 (2026) the best model complete
 | FR-18 | The IR optimiser shall remove dead writes (a cell written again before any read barrier) and report each as a warning. |
 | FR-19 | Analysis shall compute the write-set, enforce the `--allow` allowlist, warn when a constant overwrites a formula, and reject edits that create circular references (with path). |
 | FR-20 | Simulation shall apply the IR to the engine and recompute. It shall report predicted values for written and affected cells, cells that newly evaluate to errors, unverified cells, and the outcome of every `expect`; a false or error-valued `expect` is an error. |
-| FR-21 | Structural statements shall relocate references in all formulas, defined names and pending `expect`s exactly as Excel does: shift, expand, shrink, or `#REF!` on deletion. They shall be refused on sheets with merged cells, tables, conditional formatting or data validation. |
+| FR-21 | Structural statements shall relocate references in all formulas, defined names and pending `expect`s exactly as Excel does: shift, expand, shrink, or `#REF!` on deletion. They (and sheet renames) shall be refused when any sheet has address-bearing features Tabula does not relocate, or any unparsed or unsupported formula, and when an insert would push content off the grid. |
 | FR-22 | `check` shall never modify the workbook. `apply` shall write only when compilation produced no errors. |
 | FR-23 | Plans shall be rendered as text or JSON (schema version `1`), with deterministic ordering and bounded list sizes (counts always given). |
 

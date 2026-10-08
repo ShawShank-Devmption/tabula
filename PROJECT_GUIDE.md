@@ -89,7 +89,7 @@ See `demo/RESULTS.md`.
 | `tel/simulate.py` | Analysis | Write-set, impact, new cycles, expects, all before writing |
 | `tel/plan.py`, `tel/compiler.py`, `cli.py` | Driver and output | `check` never writes; `apply` writes only with zero errors |
 
-## Tests — `tests/` (`python3 -m pytest tests/ -q` → 162 passed)
+## Tests — `tests/` (`python3 -m pytest tests/ -q` → 219 passed)
 
 | File | Covers |
 |---|---|
@@ -99,6 +99,9 @@ See `demo/RESULTS.md`.
 | `test_relocate.py` | Excel's insert/delete/fill/rename behaviour table |
 | `test_tel.py` | Every diagnostic code, scopes, dead writes, simulation, apply, atomicity, guards, fidelity |
 | `test_regressions.py` | One test per bug found in the code review (see tasks.md T3.11) |
+| `test_dependency_safety.py` | SUMIF effective ranges, conservative invalidation, randomised incremental ≡ full recompute |
+| `test_boundary_safety.py` | Workbook-wide refusals, grid overflow, snapshot load, writer locks, concurrent changes, 1904 dates, post-write verification |
+| `test_demo_suite.py` | The 15-task suite: reference solutions pass, corrupted workbooks fail |
 
 ## Demo — `demo/`
 
@@ -111,6 +114,7 @@ See `demo/RESULTS.md`.
 | `reference/` | TEL solutions + naive openpyxl scripts |
 | `runs/` | Recorded runs: `reference/`, `live-sonnet/`, `live-haiku/` |
 | `RESULTS.md` | The headline comparison across runs |
+| `suite.py`, `suite_run.py`, `suite_evaluate.py` | Held-out 15-task suite, matched runner with frozen manifest, independent checker (Phase 3 measured experiment) |
 
 `tools/make_gradebook.py` rebuilds the gradebook files. `tools/bench.py` runs the 10k-formula
 benchmark (NFR-2).
@@ -201,7 +205,7 @@ python3 -m pytest tests/ -q         # run all tests
 ### Live demo order
 
 ```
-python3 -m pytest tests/ -q                                              # 162 passed
+python3 -m pytest tests/ -q                                              # 219 passed
 python3 -m tabula inspect demo/workbooks/sales_q3.xlsx                   # what an agent sees
 python3 -m tabula check demo/workbooks/sales_q3.xlsx demo/reference/t2_insert_row.tel
 #   -> writes, 6 affected formulas, 28 relocated, expects PASS

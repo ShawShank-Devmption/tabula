@@ -74,6 +74,13 @@ python3 -m pytest tests/ -q                             # test suite
 Exit codes: 0 OK · 1 the script has errors or apply was refused (nothing written) · 3 usage
 or I/O error.
 
+Safety in brief:
+- `check` never writes.
+- `apply` writes atomically, re-reads and verifies the result, and refuses if the workbook changed
+  meanwhile or is open in Excel. It keeps a hidden `.<name>.xlsx.tabula.lock` next to the file.
+- Insert/delete/rename are refused (`E-STRUCT`) when the workbook contains features whose stored
+  addresses Tabula cannot update.
+
 ## TEL in one screen
 
 ```
@@ -116,6 +123,11 @@ independent checker (pycel plus plain-Python expected values) scores both output
 python3 demo/run.py --driver reference    # deterministic, no LLM
 python3 demo/run.py --trials 3            # live agents; writes demo/runs/<stamp>/REPORT.md
 ```
+
+A larger held-out suite (15 tasks, five workbook layouts, including record lookup and
+safe-refusal tasks) is in `demo/suite*.py`:
+- `python3 demo/suite_run.py --driver reference` calibrates the suite without an LLM.
+- `--driver claude` runs the measured comparison.
 
 See [`demo/README.md`](demo/README.md).
 

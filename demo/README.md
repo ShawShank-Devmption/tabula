@@ -68,3 +68,37 @@ Each run folder `runs/<stamp>/<task>__<arm>__<trial>/` keeps:
   do what openpyxl's API suggests, and that is what fails.
 
 The reference runs show the failure *mode*. The live runs measure how often a real agent hits it.
+
+## Held-out suite (Phase 3 experiment)
+
+The first demo uses one workbook and explicit coordinates. The held-out suite tests whether the
+improvement generalises.
+
+**Tasks (`suite.py`):** 15 across five workbook layouts (inventory, payroll, orders, grants, fleet).
+They cover:
+- calculated columns;
+- inserts and deletes;
+- renames;
+- formula repair;
+- finding a record by its label on another sheet;
+- two tasks where a **safe refusal** is the correct answer (a chart or table whose addresses would
+  move).
+
+**Runner (`suite_run.py`):**
+- Both arms get Python + openpyxl and the same workflow guidance. The Tabula arm also gets
+  `./tabula` and `TEL.md`.
+- Before any run it freezes a manifest: fixtures, prompts, tools, source hashes and the seed.
+  Launch order is shuffled.
+- It refuses to score if the code changed mid-run.
+
+**Checker (`suite_evaluate.py`):** classifies each run as correct completion, silent corruption,
+safe refusal or failure.
+- It checks requested values, preservation of unrelated cells, styles and names, and liveness.
+- It uses the agent's final `EVAL_STATUS:` line; exiting normally is not a success claim.
+
+```bash
+python3 demo/suite_run.py --driver reference --out demo/runs/suite-calibration   # no LLM
+python3 demo/suite_run.py --driver claude --model claude-sonnet-5-5 --trials 3 --out demo/runs/suite-sonnet
+```
+
+Reference calibration: 26 correct completions + 4 safe refusals of 30. Measured runs are pending.

@@ -74,7 +74,7 @@ Review dates follow the course schedule (not fixed here).
 - [x] **T3.3** IR optimiser: dead-write elimination with `W-DEAD-WRITE`.
 
 ### 3.2 Evaluation
-- [~] **T3.4** **Differential corpus.** Open the demo workbooks and the gradebook in Excel and save them, so they carry Excel-computed cached values; add three or more real-world workbooks. `inspect` then reports engine agreement. Add a pytest that asserts 100 % agreement on simulable formulas.
+- [~] **T3.4** **Differential corpus.** (`tests/fixtures/excel/` holds two openpyxl-written fixtures, incl. a 1904 workbook. They still need opening and saving in Excel to carry real cached values.) Open the demo workbooks and the gradebook in Excel and save them, so they carry Excel-computed cached values; add three or more real-world workbooks. `inspect` then reports engine agreement. Add a pytest that asserts 100 % agreement on simulable formulas.
   *Now:* agreement reporting is implemented; pycel independently agrees with Tabula on the demo workbook. Excel-saved files are still needed.
 - [x] **T3.5** Benchmark (`tools/bench.py`, 10,001 formulas: per-row, a 2,500-deep chain, windowed ranges, conditionals). Measured:
   - full recompute: 50 ms;
@@ -106,6 +106,17 @@ Review dates follow the course schedule (not fixed here).
   - empty-string literals, `0^0`, and 15-digit comparison.
 
   The reviewer's 400-script randomized differential test (predicted state vs reloaded `apply` output) passes with 0 mismatches.
+
+### 3.5 Safety hardening and held-out evaluation (2026-10-08)
+Detailed ledger: `docs/implementation/safety-and-evaluation.md` and `boundary-report.md`.
+- [x] **T3.12** Conservative uncertainty propagation: after any edit, unparsed or unsupported formulas and their dependents are unverified; expects over them cannot pass.
+- [x] **T3.13** `SUMIF` effective sum range in the dependency graph; randomised incremental ≡ full recompute test.
+- [x] **T3.14** Workbook-wide `E-STRUCT` refusal for structural edits and renames (charts, pivots, tables, validation, hyperlinks, print areas, unsupported formulas such as `INDIRECT`, …); grid-overflow refusal; post-write verification of every moved cell.
+- [x] **T3.15** Single-snapshot load; cooperating-writer lock files; commit-time revalidation of source, output and Excel owner files. Residual limit: Excel ignores advisory locks.
+- [x] **T3.16** 1900/1904 date systems.
+- [x] **T3.17** Held-out suite: 15 tasks across five workbook layouts (`demo/suite.py`), including label lookup and two safe-refusal tasks. Matched two-arm runner with a frozen manifest (`demo/suite_run.py`). Independent checker with preservation and mutation checks (`demo/suite_evaluate.py`). Reference calibration: 26 completions + 4 safe refusals of 30.
+- [ ] **T3.18** Measured live comparison: 15 tasks × 3 trials × 2 arms = 90 runs per model on the subscription, then a second model; comparison report.
+- [ ] **T3.19** Decide whether to keep the workbook-wide refusal or relax it to per-sheet with reference tracking (or implement relocation of those features, S4).
 
 ### Stretch (only if ahead)
 - [ ] S1 Formula bytecode VM + AST optimiser (the Revision 1 Phase 3 plan), behind the same evaluator interface.
